@@ -328,38 +328,76 @@ const UserSearchResult = () => {
   );
 
   // Initial data fetch
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const { formData, ...restState } = state || {};
-        const requestData = {
-          ...restState,
-          ...(formData || {}),
-          userId, // Add userId to request
-        };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const { formData, ...restState } = state || {};
+  //       const requestData = {
+  //         ...restState,
+  //         ...(formData || {}),
+  //         userId, // Add userId to request
+  //       };
 
-        const response = await fetchSearchedProfileData(requestData);
-        if (response.status === 200) {
-          setUsers(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching profiles:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       const response = await fetchSearchedProfileData(requestData);
+  //       if (response.status === 200) {
+  //         setUsers(response.data.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching profiles:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    if (state) {
-      if (state.formData && state.formData.gender) {
-        setFilters((prev) => ({
-          ...prev,
-          gender: state.formData.gender,
-        }));
+  //   if (state) {
+  //     if (state.formData && state.formData.gender) {
+  //       setFilters((prev) => ({
+  //         ...prev,
+  //         gender: state.formData.gender,
+  //       }));
+  //     }
+  //     fetchData();
+  //   }
+  // }, [state]);
+
+  // Initial data fetch
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const { formData, ...restState } = state || {};
+
+      const requestData = {
+        ...restState,
+        ...(formData || {}),
+        userId, // Add userId
+      };
+
+      const response = await fetchSearchedProfileData(requestData);
+
+      if (response.status === 200) {
+        setUsers(response.data.data || []);
       }
-      fetchData();
+    } catch (error) {
+      console.error("Error fetching profiles:", error);
+      setUsers([]); // fallback
+    } finally {
+      setLoading(false);
     }
-  }, [state]);
+  };
+
+  // ✅ ALWAYS call API
+  fetchData();
+
+  // ✅ optional filter सेट
+  if (state?.formData?.gender) {
+    setFilters((prev) => ({
+      ...prev,
+      gender: state.formData.gender,
+    }));
+  }
+}, [state, userId]);
 
   // Debounced filter effect - calls API when filters change
   useEffect(() => {

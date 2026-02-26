@@ -404,7 +404,7 @@ const UserDashboardPage = () => {
                                 }}
                               />
                               <div>
-                                <h5>{profile.userName}</h5>
+                             <h5>{profile.agwid || profile.userName}</h5>
                                 <span className="city mr-5">
                                   {profile.city}
                                 </span>

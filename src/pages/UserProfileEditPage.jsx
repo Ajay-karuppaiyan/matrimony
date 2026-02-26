@@ -729,6 +729,9 @@ const UserProfileEditPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showVisibilityOptions, setShowVisibilityOptions] = useState(false);
+  const [videoFile, setVideoFile] = useState(null);
+const [videoPreview, setVideoPreview] = useState(null);
+const [deleteVideoFlag, setDeleteVideoFlag] = useState(false);
 
   // Hobbies options for checkboxes
   const hobbiesOptions = [
@@ -1131,6 +1134,29 @@ const UserProfileEditPage = () => {
     }
   };
 
+
+ const handleVideoChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setHasUnsavedChanges(true);
+    setVideoFile(file);
+    setDeleteVideoFlag(false); // reset delete flag if new video selected
+
+    // Create local preview
+    const url = URL.createObjectURL(file);
+    setVideoPreview(url);
+  }
+};
+
+const handleDeleteVideo = () => {
+  setHasUnsavedChanges(true);
+  setVideoFile(null);
+  setVideoPreview(null);
+  setDeleteVideoFlag(true); // mark for deletion in backend
+};
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -1189,6 +1215,19 @@ const UserProfileEditPage = () => {
           submitFormData.append("additionalImages", file);
         });
       }
+      
+
+      // Append video if new
+if (videoFile) {
+  submitFormData.append("selfIntroductionVideo", videoFile);
+}
+
+// Append delete flag if video removed
+if (deleteVideoFlag) {
+  submitFormData.append("deleteSelfIntroductionVideo", "true");
+}
+
+
 
       // Append existing additional images that weren't removed
       if (existingAdditionalImages.length > 0) {
@@ -1311,6 +1350,105 @@ const UserProfileEditPage = () => {
                     removeAdditionalImage={removeAdditionalImage}
                     handleDeleteProfileImage={handleDeleteProfileImage}
                   />
+
+                  <FormSection title="Self Introduction Video">
+  <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+    {videoPreview ? (
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <video
+          src={videoPreview}
+          controls
+          style={{
+            width: "300px",
+            borderRadius: "8px",
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        />
+        {/* Delete Button */}
+        <button
+          type="button"
+          onClick={handleDeleteVideo}
+          style={{
+            position: "absolute",
+            top: "6px",
+            right: "6px",
+            width: "28px",
+            height: "28px",
+            borderRadius: "50%",
+            background: "#ef4444",
+            border: "2px solid #fff",
+            color: "#fff",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "14px",
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          title="Remove video"
+        >
+          <i className="fa fa-times"></i>
+        </button>
+
+        {/* Download Button */}
+        <a
+          href={videoPreview}
+          download="SelfIntroduction.mp4"
+          style={{
+            position: "absolute",
+            bottom: "6px",
+            right: "6px",
+            padding: "6px 10px",
+            background: "#667eea",
+            color: "#fff",
+            fontSize: "12px",
+            fontWeight: "600",
+            borderRadius: "6px",
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            cursor: "pointer",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "#5568d3";
+            e.currentTarget.style.transform = "scale(1.05)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "#667eea";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          <i className="fa fa-download"></i> Download
+        </a>
+      </div>
+    ) : (
+      <div>
+        <input
+          type="file"
+          accept="video/*"
+          onChange={handleVideoChange}
+          style={{
+            padding: "8px",
+            border: "2px dashed #d1d5db",
+            borderRadius: "8px",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            background: "#f9fafb",
+          }}
+        />
+        <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "6px" }}>
+          Upload a short self-introduction video
+        </p>
+      </div>
+    )}
+  </div>
+</FormSection>
 
                   {/* Profile Visibility Toggle Section */}
                   <div
@@ -1517,6 +1655,7 @@ const UserProfileEditPage = () => {
                     )}
                   </div>
 
+               
                   {/* Basic Details Section */}
                   <FormSection title="Basic Details">
                     <div

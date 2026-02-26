@@ -1480,7 +1480,7 @@
 //             </div>
 
 //             {/* Right Column: Profile Details */}
-            
+
 //             <div
 //               className="col-md-9 col-lg-10"
 //               style={{
@@ -1572,74 +1572,74 @@
 //                     { label: "Religious Detail", value: userInfo?.religiousDetail },
 //                   ],
 //                 },
-                // {
-                //   title: "Professional Information",
-                //   icon: "fa-briefcase",
-                //   data: [
-                //     { label: "Education", value: userInfo?.education },
-                //     { label: "Additional Education", value: userInfo?.additionalEducation },
-                //     { label: "College/Institution", value: userInfo?.college },
-                //     { label: "Education in Detail", value: userInfo?.educationDetail },
-                //     { label: "Employment Type", value: userInfo?.employmentType },
-                //     { label: "Occupation", value: userInfo?.occupation },
-                //     { label: "Position", value: userInfo?.position },
-                //     { label: "Company Name", value: userInfo?.companyName },
-                //     { label: "Annual Income", value: userInfo?.annualIncome },
-                //   ],
-                // },
-                // {
-                //   title: "Contact Information",
-                //   icon: "fa-address-card",
-                //   data: [
-                //     { label: "Mobile Number", value: userInfo?.userMobile },
-                //     { label: "Alternate Mobile", value: userInfo?.alternateMobile },
-                //     { label: "Landline", value: userInfo?.landlineNumber },
-                //     { label: "Email", value: userInfo?.userEmail },
-                //     { label: "Current Address", value: userInfo?.currentAddress },
-                //     { label: "Permanent Address", value: userInfo?.permanentAddress },
-                //     { label: "City", value: userInfo?.city },
-                //     { label: "State", value: userInfo?.state },
-                //     { label: "Pincode", value: userInfo?.pincode },
-                //     { label: "Citizen Of", value: userInfo?.citizenOf },
-                //   ],
-                // },
-                // {
-                //   title: "Lifestyle & Hobbies",
-                //   icon:"fa-music",
-                //   data: [
-                //     { label: "Hobbies", value: Array.isArray(userInfo?.hobbies) ? userInfo.hobbies.join(", ") : userInfo?.hobbies },
-                //     { label: "Interests", value: userInfo?.interests },
-                //     { label: "Music", value: userInfo?.music },
-                //     { label: "Favourite Reads", value: userInfo?.favouriteReads },
-                //     { label: "Favourite Cuisines", value: userInfo?.favouriteCuisines },
-                //     { label: "Sports/Activities", value: userInfo?.sportsActivities },
-                //     { label: "Dress Styles", value: userInfo?.dressStyles },
-                //   ],
-                // },
-                // {
-                //   title: "Partner Preferences",
-                //   icon: "fa-heart",
-                //   data: [
-                //     { label: "Age Range", value: userInfo?.partnerAgeFrom && userInfo?.partnerAgeTo ? `${userInfo.partnerAgeFrom} - ${userInfo.partnerAgeTo} Years` : null },
-                //     { label: "Height", value: userInfo?.partnerHeight ? `${userInfo.partnerHeight} cm` : null },
-                //     { label: "Marital Status", value: userInfo?.partnerMaritalStatus },
-                //     { label: "Mother Tongue", value: userInfo?.partnerMotherTongue },
-                //     { label: "Caste", value: userInfo?.partnerCaste },
-                //     { label: "Physical Status", value: userInfo?.partnerPhysicalStatus },
-                //     { label: "Eating Habits", value: userInfo?.partnerEatingHabits },
-                //     { label: "Drinking Habits", value: userInfo?.partnerDrinkingHabits },
-                //     { label: "Smoking Habits", value: userInfo?.partnerSmokingHabits },
-                //     { label: "Denomination", value: userInfo?.partnerDenomination },
-                //     { label: "Spirituality", value: userInfo?.partnerSpirituality },
-                //     { label: "Education", value: userInfo?.partnerEducation },
-                //     { label: "Employment Type", value: userInfo?.partnerEmploymentType },
-                //     { label: "Occupation", value: userInfo?.partnerOccupation },
-                //     { label: "Annual Income", value: userInfo?.partnerAnnualIncome },
-                //     { label: "Country", value: userInfo?.partnerCountry },
-                //     { label: "State", value: userInfo?.partnerState },
-                //     { label: "District", value: userInfo?.partnerDistrict },
-                //   ],
-                // },
+// {
+//   title: "Professional Information",
+//   icon: "fa-briefcase",
+//   data: [
+//     { label: "Education", value: userInfo?.education },
+//     { label: "Additional Education", value: userInfo?.additionalEducation },
+//     { label: "College/Institution", value: userInfo?.college },
+//     { label: "Education in Detail", value: userInfo?.educationDetail },
+//     { label: "Employment Type", value: userInfo?.employmentType },
+//     { label: "Occupation", value: userInfo?.occupation },
+//     { label: "Position", value: userInfo?.position },
+//     { label: "Company Name", value: userInfo?.companyName },
+//     { label: "Annual Income", value: userInfo?.annualIncome },
+//   ],
+// },
+// {
+//   title: "Contact Information",
+//   icon: "fa-address-card",
+//   data: [
+//     { label: "Mobile Number", value: userInfo?.userMobile },
+//     { label: "Alternate Mobile", value: userInfo?.alternateMobile },
+//     { label: "Landline", value: userInfo?.landlineNumber },
+//     { label: "Email", value: userInfo?.userEmail },
+//     { label: "Current Address", value: userInfo?.currentAddress },
+//     { label: "Permanent Address", value: userInfo?.permanentAddress },
+//     { label: "City", value: userInfo?.city },
+//     { label: "State", value: userInfo?.state },
+//     { label: "Pincode", value: userInfo?.pincode },
+//     { label: "Citizen Of", value: userInfo?.citizenOf },
+//   ],
+// },
+// {
+//   title: "Lifestyle & Hobbies",
+//   icon:"fa-music",
+//   data: [
+//     { label: "Hobbies", value: Array.isArray(userInfo?.hobbies) ? userInfo.hobbies.join(", ") : userInfo?.hobbies },
+//     { label: "Interests", value: userInfo?.interests },
+//     { label: "Music", value: userInfo?.music },
+//     { label: "Favourite Reads", value: userInfo?.favouriteReads },
+//     { label: "Favourite Cuisines", value: userInfo?.favouriteCuisines },
+//     { label: "Sports/Activities", value: userInfo?.sportsActivities },
+//     { label: "Dress Styles", value: userInfo?.dressStyles },
+//   ],
+// },
+// {
+//   title: "Partner Preferences",
+//   icon: "fa-heart",
+//   data: [
+//     { label: "Age Range", value: userInfo?.partnerAgeFrom && userInfo?.partnerAgeTo ? `${userInfo.partnerAgeFrom} - ${userInfo.partnerAgeTo} Years` : null },
+//     { label: "Height", value: userInfo?.partnerHeight ? `${userInfo.partnerHeight} cm` : null },
+//     { label: "Marital Status", value: userInfo?.partnerMaritalStatus },
+//     { label: "Mother Tongue", value: userInfo?.partnerMotherTongue },
+//     { label: "Caste", value: userInfo?.partnerCaste },
+//     { label: "Physical Status", value: userInfo?.partnerPhysicalStatus },
+//     { label: "Eating Habits", value: userInfo?.partnerEatingHabits },
+//     { label: "Drinking Habits", value: userInfo?.partnerDrinkingHabits },
+//     { label: "Smoking Habits", value: userInfo?.partnerSmokingHabits },
+//     { label: "Denomination", value: userInfo?.partnerDenomination },
+//     { label: "Spirituality", value: userInfo?.partnerSpirituality },
+//     { label: "Education", value: userInfo?.partnerEducation },
+//     { label: "Employment Type", value: userInfo?.partnerEmploymentType },
+//     { label: "Occupation", value: userInfo?.partnerOccupation },
+//     { label: "Annual Income", value: userInfo?.partnerAnnualIncome },
+//     { label: "Country", value: userInfo?.partnerCountry },
+//     { label: "State", value: userInfo?.partnerState },
+//     { label: "District", value: userInfo?.partnerDistrict },
+//   ],
+// },
 //               ].map((section, idx) => (
 //                 <ProfileSection key={idx} title={section.title} icon={section.icon}>
 //                   <div style={{ display: "flex", gap: "50px", flexWrap: "wrap" }}>
@@ -1664,8 +1664,8 @@
 //         </div>
 //       </div>
 //     </div>
-  
-  
+
+
 //       {!isPaidUser && (
 //       <div
 //   style={{
@@ -1922,17 +1922,24 @@ const MoreDetails = () => {
   const [showInterestModalUser, setShowInterestModalUser] = useState(null);
   const [zoomImage, setZoomImage] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(1);
-
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [showContact, setShowContact] = useState(false);
+  const [showUpgradePopup, setShowUpgradePopup] = useState(false);
   // Fetch current logged-in user
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
         const res = await getUserProfile(currentUserId);
-        if (res.status === 200) setCurrentUser(res.data.data);
+        if (res.status === 200) {
+          setCurrentUser(res.data.data);
+        }
       } catch (err) {
         console.error("Error fetching current user:", err);
+      } finally {
+        setLoadingUser(false); // ✅ முக்கியம்
       }
     };
+
     fetchCurrentUser();
   }, [currentUserId]);
 
@@ -1970,6 +1977,18 @@ const MoreDetails = () => {
     setShowInterestModalUser(userInfo);
   };
 
+  if (loadingUser) {
+    return null;
+  }
+
+  const handleContactClick = () => {
+    if (!isPaidUser) {
+      setShowUpgradePopup(true);
+    } else {
+      setShowContact(true);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white-100">
       {/* Fixed Header */}
@@ -1981,7 +2000,7 @@ const MoreDetails = () => {
         <div className="db">
           <div className="container-fluid" style={{ paddingLeft: 0, paddingRight: 0 }}>
             <div className="row" style={{ marginLeft: 0, marginRight: 0, position: "relative" }}>
-              
+
               {/* Left Column: Profile Image + Show Interest */}
               <div
                 className="col-md-3 col-lg-2"
@@ -1992,7 +2011,7 @@ const MoreDetails = () => {
                   gap: "20px",
                   paddingTop: "0px",
                   paddingBottom: "20px",
-                  
+
                 }}
               >
                 <div
@@ -2050,7 +2069,7 @@ const MoreDetails = () => {
                       padding: "12px 0",
                       fontSize: "1rem",
                       fontWeight: "600",
-                       gap: "90px",
+                      gap: "90px",
                       cursor: isPaidUser ? "pointer" : "not-allowed",
                       opacity: isPaidUser ? 1 : 0.6,
                     }}
@@ -2066,7 +2085,7 @@ const MoreDetails = () => {
                       "data-bs-target": "#sendInter",
                     })}
                   >
-                    Show Interest
+                    Send Interest
                   </button>
                 </div>
               </div>
@@ -2093,12 +2112,12 @@ const MoreDetails = () => {
 
                 {/* Blur other profile details for unpaid users */}
                 <div
-                  style={{
-                    filter: isPaidUser ? "none" : "blur(8px)",
-                    pointerEvents: isPaidUser ? "auto" : "none",
-                    userSelect: isPaidUser ? "auto" : "none",
-                    transition: "0.3s ease",
-                  }}
+                // style={{
+                //   filter: isPaidUser ? "none" : "blur(8px)",
+                //   pointerEvents: isPaidUser ? "auto" : "none",
+                //   userSelect: isPaidUser ? "auto" : "none",
+                //   transition: "0.3s ease",
+                // }}
                 >
                   {/* About Me */}
                   {userInfo?.aboutMe && (
@@ -2163,85 +2182,115 @@ const MoreDetails = () => {
                         { label: "Religious Detail", value: userInfo?.religiousDetail },
                       ],
                     },
-                   {
-                  title: "Professional Information",
-                  icon: "fa-briefcase",
-                  data: [
-                    { label: "Education", value: userInfo?.education },
-                    { label: "Additional Education", value: userInfo?.additionalEducation },
-                    { label: "College/Institution", value: userInfo?.college },
-                    { label: "Education in Detail", value: userInfo?.educationDetail },
-                    { label: "Employment Type", value: userInfo?.employmentType },
-                    { label: "Occupation", value: userInfo?.occupation },
-                    { label: "Position", value: userInfo?.position },
-                    { label: "Company Name", value: userInfo?.companyName },
-                    { label: "Annual Income", value: userInfo?.annualIncome },
-                  ],
-                },
-                {
-                  title: "Contact Information",
-                  icon: "fa-address-card",
-                  data: [
-                    { label: "Mobile Number", value: userInfo?.userMobile },
-                    { label: "Alternate Mobile", value: userInfo?.alternateMobile },
-                    { label: "Landline", value: userInfo?.landlineNumber },
-                    { label: "Email", value: userInfo?.userEmail },
-                    { label: "Current Address", value: userInfo?.currentAddress },
-                    { label: "Permanent Address", value: userInfo?.permanentAddress },
-                    { label: "City", value: userInfo?.city },
-                    { label: "State", value: userInfo?.state },
-                    { label: "Pincode", value: userInfo?.pincode },
-                    { label: "Citizen Of", value: userInfo?.citizenOf },
-                  ],
-                },
-                {
-                  title: "Lifestyle & Hobbies",
-                  icon:"fa-music",
-                  data: [
-                    { label: "Hobbies", value: Array.isArray(userInfo?.hobbies) ? userInfo.hobbies.join(", ") : userInfo?.hobbies },
-                    { label: "Interests", value: userInfo?.interests },
-                    { label: "Music", value: userInfo?.music },
-                    { label: "Favourite Reads", value: userInfo?.favouriteReads },
-                    { label: "Favourite Cuisines", value: userInfo?.favouriteCuisines },
-                    { label: "Sports/Activities", value: userInfo?.sportsActivities },
-                    { label: "Dress Styles", value: userInfo?.dressStyles },
-                  ],
-                },
-                {
-                  title: "Partner Preferences",
-                  icon: "fa-heart",
-                  data: [
-                    { label: "Age Range", value: userInfo?.partnerAgeFrom && userInfo?.partnerAgeTo ? `${userInfo.partnerAgeFrom} - ${userInfo.partnerAgeTo} Years` : null },
-                    { label: "Height", value: userInfo?.partnerHeight ? `${userInfo.partnerHeight} cm` : null },
-                    { label: "Marital Status", value: userInfo?.partnerMaritalStatus },
-                    { label: "Mother Tongue", value: userInfo?.partnerMotherTongue },
-                    { label: "Caste", value: userInfo?.partnerCaste },
-                    { label: "Physical Status", value: userInfo?.partnerPhysicalStatus },
-                    { label: "Eating Habits", value: userInfo?.partnerEatingHabits },
-                    { label: "Drinking Habits", value: userInfo?.partnerDrinkingHabits },
-                    { label: "Smoking Habits", value: userInfo?.partnerSmokingHabits },
-                    { label: "Denomination", value: userInfo?.partnerDenomination },
-                    { label: "Spirituality", value: userInfo?.partnerSpirituality },
-                    { label: "Education", value: userInfo?.partnerEducation },
-                    { label: "Employment Type", value: userInfo?.partnerEmploymentType },
-                    { label: "Occupation", value: userInfo?.partnerOccupation },
-                    { label: "Annual Income", value: userInfo?.partnerAnnualIncome },
-                    { label: "Country", value: userInfo?.partnerCountry },
-                    { label: "State", value: userInfo?.partnerState },
-                    { label: "District", value: userInfo?.partnerDistrict },
-                  ],
-                },
+                    {
+                      title: "Professional Information",
+                      icon: "fa-briefcase",
+                      data: [
+                        { label: "Education", value: userInfo?.education },
+                        { label: "Additional Education", value: userInfo?.additionalEducation },
+                        { label: "College/Institution", value: userInfo?.college },
+                        { label: "Education in Detail", value: userInfo?.educationDetail },
+                        { label: "Employment Type", value: userInfo?.employmentType },
+                        { label: "Occupation", value: userInfo?.occupation },
+                        { label: "Position", value: userInfo?.position },
+                        { label: "Company Name", value: userInfo?.companyName },
+                        { label: "Annual Income", value: userInfo?.annualIncome },
+                      ],
+                    },
+                    {
+                      title: "Contact Information",
+                      icon: "fa-address-card",
+                      data: showContact
+                        ? [
+                          { label: "Mobile Number", value: userInfo?.userMobile },
+                          { label: "Alternate Mobile", value: userInfo?.alternateMobile },
+                          { label: "Landline", value: userInfo?.landlineNumber },
+                          { label: "Email", value: userInfo?.userEmail },
+                          { label: "Current Address", value: userInfo?.currentAddress },
+                          { label: "Permanent Address", value: userInfo?.permanentAddress },
+                          { label: "City", value: userInfo?.city },
+                          { label: "State", value: userInfo?.state },
+                          { label: "Pincode", value: userInfo?.pincode },
+                          { label: "Citizen Of", value: userInfo?.citizenOf },
+                        ]
+                        : [],
+                    },
+                    {
+                      title: "Lifestyle & Hobbies",
+                      icon: "fa-music",
+                      data: [
+                        { label: "Hobbies", value: Array.isArray(userInfo?.hobbies) ? userInfo.hobbies.join(", ") : userInfo?.hobbies },
+                        { label: "Interests", value: userInfo?.interests },
+                        { label: "Music", value: userInfo?.music },
+                        { label: "Favourite Reads", value: userInfo?.favouriteReads },
+                        { label: "Favourite Cuisines", value: userInfo?.favouriteCuisines },
+                        { label: "Sports/Activities", value: userInfo?.sportsActivities },
+                        { label: "Dress Styles", value: userInfo?.dressStyles },
+                      ],
+                    },
+                    {
+                      title: "Partner Preferences",
+                      icon: "fa-heart",
+                      data: [
+                        { label: "Age Range", value: userInfo?.partnerAgeFrom && userInfo?.partnerAgeTo ? `${userInfo.partnerAgeFrom} - ${userInfo.partnerAgeTo} Years` : null },
+                        { label: "Height", value: userInfo?.partnerHeight ? `${userInfo.partnerHeight} cm` : null },
+                        { label: "Marital Status", value: userInfo?.partnerMaritalStatus },
+                        { label: "Mother Tongue", value: userInfo?.partnerMotherTongue },
+                        { label: "Caste", value: userInfo?.partnerCaste },
+                        { label: "Physical Status", value: userInfo?.partnerPhysicalStatus },
+                        { label: "Eating Habits", value: userInfo?.partnerEatingHabits },
+                        { label: "Drinking Habits", value: userInfo?.partnerDrinkingHabits },
+                        { label: "Smoking Habits", value: userInfo?.partnerSmokingHabits },
+                        { label: "Denomination", value: userInfo?.partnerDenomination },
+                        { label: "Spirituality", value: userInfo?.partnerSpirituality },
+                        { label: "Education", value: userInfo?.partnerEducation },
+                        { label: "Employment Type", value: userInfo?.partnerEmploymentType },
+                        { label: "Occupation", value: userInfo?.partnerOccupation },
+                        { label: "Annual Income", value: userInfo?.partnerAnnualIncome },
+                        { label: "Country", value: userInfo?.partnerCountry },
+                        { label: "State", value: userInfo?.partnerState },
+                        { label: "District", value: userInfo?.partnerDistrict },
+                      ],
+                    },
                   ].map((section, idx) => (
-                    <ProfileSection key={idx} title={section.title} icon={section.icon}>
-                      <div style={{ display: "flex", gap: "50px", flexWrap: "wrap" }}>
-                        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
-                          {section.data.slice(0, 5).map((item, i) => <InfoRow key={i} {...item} />)}
+                    <React.Fragment key={idx}>
+
+                      {/* Contact Button */}
+                      {section.title === "Contact Information" && !showContact && (
+                        <div style={{ marginBottom: "15px" }}>
+                          <button
+                            onClick={handleContactClick}
+                            style={{
+                              background: "#7c3aed",
+                              color: "#fff",
+                              border: "none",
+                              padding: "10px 20px",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                              fontWeight: "600",
+                            }}
+                          >
+                            View Contact Information
+                          </button>
                         </div>
-                        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
-                          {section.data.slice(5).map((item, i) => <InfoRow key={i} {...item} />)}
+                      )}
+
+                      <ProfileSection title={section.title} icon={section.icon}>
+                        <div style={{ display: "flex", gap: "50px", flexWrap: "wrap" }}>
+                          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
+                            {section.data.slice(0, 5).map((item, i) => (
+                              <InfoRow key={i} {...item} />
+                            ))}
+                          </div>
+                          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
+                            {section.data.slice(5).map((item, i) => (
+                              <InfoRow key={i} {...item} />
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    </ProfileSection>
+                      </ProfileSection>
+
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
@@ -2250,8 +2299,8 @@ const MoreDetails = () => {
         </div>
       </div>
 
-      {/* Paid Users Only Overlay */}
-      {!isPaidUser && (
+      {/* Paid Users Only Overlay
+     {!loadingUser && !isPaidUser && (
         <div
           style={{
             position: "fixed",
@@ -2302,7 +2351,7 @@ const MoreDetails = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       {showInterestModalUser && (
         <ShowInterest
@@ -2376,7 +2425,127 @@ const MoreDetails = () => {
           />
         </div>
       )}
+      {showUpgradePopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0, 0, 0, 0.65)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+            backdropFilter: "blur(4px)",
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              padding: "35px 30px",
+              borderRadius: "16px",
+              textAlign: "center",
+              width: "100%",
+              maxWidth: "380px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+              animation: "fadeInScale 0.3s ease",
+            }}
+          >
+            {/* Icon */}
+            <div
+              style={{
+                fontSize: "40px",
+                marginBottom: "10px",
+              }}
+            >
+              🔒
+            </div>
 
+            {/* Title */}
+            <h3
+              style={{
+                fontSize: "1.4rem",
+                fontWeight: "700",
+                marginBottom: "10px",
+                color: "#111",
+              }}
+            >
+              Premium Feature
+            </h3>
+
+            {/* Description */}
+            <p
+              style={{
+                fontSize: "0.95rem",
+                color: "#666",
+                marginBottom: "25px",
+              }}
+            >
+              Upgrade your plan to unlock contact details and connect directly.
+            </p>
+
+            {/* Buttons */}
+            <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+              <button
+                onClick={() => navigate("/user/user-plan-selection")}
+                style={{
+                  background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+                  color: "#fff",
+                  border: "none",
+                  padding: "10px 18px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  fontSize: "0.95rem",
+                  transition: "0.2s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                Upgrade Now
+              </button>
+
+              <button
+                onClick={() => setShowUpgradePopup(false)}
+                style={{
+                  background: "#f3f4f6",
+                  color: "#333",
+                  border: "none",
+                  padding: "10px 18px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  fontWeight: "500",
+                  fontSize: "0.9rem",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+
+          {/* Animation */}
+          <style>
+            {`
+        @keyframes fadeInScale {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      `}
+          </style>
+        </div>
+      )}
       <Footer />
       <CopyRights />
     </div>

@@ -8,14 +8,14 @@ const TopMenu = () => {
         <div className="row">
           <div className="lhs">
             <ul>
-              <li>
+              {/* <li>
                 <a href="#!" className="ser-open">
                   <i className="fa fa-search" aria-hidden="true" />
                 </a>
-              </li>
+              </li> */}
               <li>
-                <Link to="/about-us">About</Link>
-              </li>
+  <Link to="/blogs">Blogs</Link>
+</li>
               <li>
                 <Link to="/faq-page">FAQ</Link>
               </li>

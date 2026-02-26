@@ -277,16 +277,60 @@ const HeroSection = () => {
     }));
   };
 
+  const handleSearchClick = () => {
+    const userId = localStorage.getItem("userId");
+
+    if (userId) {
+      // ✅ login irundha → data pass pannitu po
+      navigate("/show-searched-result", {
+        state: { formData: formData },
+      });
+    } else {
+      // ❌ login illa → login + data save
+      navigate("/user/user-login", {
+        state: {
+          from: "/show-searched-result",
+          formData: formData, // 🔥 முக்கியம்
+        },
+      });
+    }
+  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Form Data:", formData);
+  //   console.log("lookingFor:", formData.lookingFor);
+  //   console.log("ageFrom:", formData.ageFrom);
+  //   console.log("ageTo:", formData.ageTo);
+  //   console.log("community:", formData.community);
+
+  //   // Navigate to search results page with form data
+  //   navigate("/show-searched-result", { state: { formData: formData } });
+  // };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // ✅ Logs (keep pannalaam)
     console.log("Form Data:", formData);
     console.log("lookingFor:", formData.lookingFor);
     console.log("ageFrom:", formData.ageFrom);
     console.log("ageTo:", formData.ageTo);
     console.log("community:", formData.community);
 
-    // Navigate to search results page with form data
-    navigate("/show-searched-result", { state: { formData: formData } });
+    // 🔐 Login check
+    const isLoggedIn = localStorage.getItem("token");
+    // or "userId"
+
+    if (!isLoggedIn) {
+      navigate("/user/user-login");
+      return;
+    }
+
+    // ✅ If logged in
+    navigate("/show-searched-result", {
+      state: { formData: formData },
+    });
   };
 
   // Calculate percentage for range slider
@@ -300,9 +344,8 @@ const HeroSection = () => {
       {backgroundImages.map((img, index) => (
         <div
           key={index}
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
-            index === currentBgIndex ? "opacity-85" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${index === currentBgIndex ? "opacity-85" : "opacity-0"
+            }`}
           style={{ backgroundImage: `url(${img})` }}
         />
       ))}
@@ -484,7 +527,8 @@ const HeroSection = () => {
 
               {/* Submit Button */}
               <button
-                type="submit"
+                type="button"   // ❗ முக்கியம் (submit இருந்து button ஆக மாற்று)
+                onClick={handleSearchClick}   // ❗ function attach
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
               >
                 Search

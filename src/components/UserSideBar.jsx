@@ -477,6 +477,7 @@
 import React, { useEffect, useState } from "react";
 import { getUserProfile } from "../api/axiosService/userAuthService";
 import profImage from "../assets/images/blue-circle-with-white-user_78370-4707.avif";
+import { Link } from "react-router-dom";
 
 const UserSideBar = ({ sidebarTop = "115px" }) => {
   const userId = localStorage.getItem("userId");
@@ -721,48 +722,103 @@ const UserSideBar = ({ sidebarTop = "115px" }) => {
             const hovered = hoveredIndex === i;
 
             return (
-              <li key={i} style={styles.menuItem}>
-                <a
-                  href={item.path}
-                  style={{
-                    ...styles.link,
-                    ...(active && styles.activeLink),
-                    ...(item.danger && styles.danger),
-                    position: "relative",
-                  }}
-                  onMouseEnter={() => setHoveredIndex(i)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
-                  {active && <span style={styles.activeDot}></span>}
-                  <i className={item.icon} style={styles.icon}></i>
-                  {item.label}
+            <li key={i} style={styles.menuItem}>
+  <Link
+    to={item.path}
+    style={{
+      ...styles.link,
+      ...(active && styles.activeLink),
+      ...(item.danger && styles.danger),
+      position: "relative",
+    }}
+    onMouseEnter={() => setHoveredIndex(i)}
+    onMouseLeave={() => setHoveredIndex(null)}
+  >
+    {active && <span style={styles.activeDot}></span>}
+    <i className={item.icon} style={styles.icon}></i>
+    {item.label}
 
-                  {/* Tooltip */}
-                  <div
-                    style={{
-                      ...styles.tooltip,
-                      ...(hovered && styles.tooltipVisible),
-                    }}
-                  >
-                    <span style={styles.tooltipArrow}></span>
-                    {item.label}
-                  </div>
-                </a>
-              </li>
+    <div
+      style={{
+        ...styles.tooltip,
+        ...(hoveredIndex === i && styles.tooltipVisible),
+      }}
+    >
+      <span style={styles.tooltipArrow}></span>
+      {item.label}
+    </div>
+  </Link>
+</li>
             );
           })}
         </ul>
       </div>
 
-      {isModalOpen && (
-        <div style={styles.modal} onClick={() => setIsModalOpen(false)}>
-          <img
-            src={images[currentImageIndex]}
-            alt="Preview"
-            style={styles.modalImg}
-          />
-        </div>
-      )}
+     {isModalOpen && (
+  <div style={styles.modal} onClick={() => setIsModalOpen(false)}>
+
+    {/* LEFT */}
+    {images.length > 1 && (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handlePrev();
+        }}
+        style={{
+          position: "absolute",
+          left: "30px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          fontSize: "30px",
+          background: "#667eea",
+          color: "#fff",
+          border: "none",
+          borderRadius: "50%",
+          width: "50px",
+          height: "50px",
+          cursor: "pointer",
+        }}
+      >
+        ‹
+      </button>
+    )}
+
+    {/* IMAGE */}
+    <img
+      src={images[currentImageIndex]}
+      alt="Preview"
+      style={styles.modalImg}
+      onClick={(e) => e.stopPropagation()}
+    />
+
+    {/* RIGHT */}
+    {images.length > 1 && (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleNext();
+        }}
+        style={{
+          position: "absolute",
+          right: "30px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          fontSize: "30px",
+          background: "#667eea",
+          color: "#fff",
+          border: "none",
+          borderRadius: "50%",
+          width: "50px",
+          height: "50px",
+          cursor: "pointer",
+        }}
+      >
+        ›
+      </button>
+    )}
+
+  </div>
+)}
     </>
   );
 };

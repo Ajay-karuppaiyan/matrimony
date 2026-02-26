@@ -615,6 +615,49 @@ const UserProfilePage = () => {
                     </div>
                   </div>
 
+                {userInfo && (
+  <ProfileSection title="Self Introduction Video" icon="fa-video">
+    <div style={{ position: "relative", display: "inline-block" }}>
+      {userInfo.selfIntroductionVideo ? (
+        <>
+          <video
+            src={userInfo.selfIntroductionVideo}
+            controls
+            style={{
+              width: "100%",
+              borderRadius: "10px",
+              maxHeight: "400px",
+            }}
+            onError={(e) => {
+              e.target.onerror = null; // prevent infinite loop
+              e.target.src = ""; // fallback, could be placeholder image
+            }}
+          />
+          {/* Download Button */}
+          <a
+            href={userInfo.selfIntroductionVideo}
+            download="SelfIntroduction.mp4"
+            style={{
+              position: "absolute",
+              bottom: "10px",
+              right: "10px",
+              padding: "6px 12px",
+              background: "#667eea",
+              color: "#fff",
+              borderRadius: "6px",
+              textDecoration: "none",
+            }}
+          >
+            Download
+          </a>
+        </>
+      ) : (
+        <p>No video uploaded yet.</p>
+      )}
+    </div>
+  </ProfileSection>
+)}
+
                   {/* About Me Section */}
                   {userInfo?.aboutMe && (
                     <div className="col-12 mb-3">

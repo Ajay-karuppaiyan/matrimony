@@ -15,87 +15,113 @@ const Events = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchState, setSearchState] = useState("");
-  const [userLocation, setUserLocation] = useState(null);
+ const [userLocation, setUserLocation] = useState({
+  lat: null,
+  lng: null,
+  city: "",
+  state: "",
+});
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [activeTab, setActiveTab] = useState("Active");
 
-  useEffect(() => {
-    // Attempt to auto-detect user location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.log("Location access denied or error:", error);
-        },
-      );
-    }
+ useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
 
-    const fetchEvents = async () => {
       try {
-        setLoading(true);
-        const response = await getAllEvents();
-        if (response.data && response.data.success) {
-          setEvents(response.data.data);
-        } else if (Array.isArray(response.data)) {
-          setEvents(response.data);
-        } else {
-          setEvents([]);
-        }
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+        );
+        const data = await res.json();
+
+        const city =
+          data.address.city ||
+          data.address.town ||
+          data.address.village ||
+          "";
+
+        const state = data.address.state || "";
+
+        setUserLocation({ lat, lng, city, state });
       } catch (err) {
-        console.error("Error fetching events:", err);
-        setError("Failed to load events. Please try again later.");
-      } finally {
-        setLoading(false);
+        console.log("Error getting location details", err);
       }
-    };
-
-    fetchEvents();
-  }, []);
-
-  // Filter and Sort Events
-  const getFilteredAndSortedEvents = () => {
-    let filtered = [...events];
-    const now = new Date();
-
-    // Filter by Search
-    if (searchState.trim()) {
-      const query = searchState.toLowerCase();
-      filtered = filtered.filter(
-        (event) =>
-          (event.state && event.state.toLowerCase().includes(query)) ||
-          (event.location && event.location.toLowerCase().includes(query)),
-      );
-    }
-
-    // Filter by Active/Inactive Tab
-    if (activeTab === "Active") {
-      filtered = filtered.filter((event) => {
-        const eventDate = new Date(event.date);
-        // Active Tab: Status is Active AND Date is in the future (or today)
-        return event.status === "Active" && eventDate >= now;
-      });
-    } else {
-      filtered = filtered.filter((event) => {
-        const eventDate = new Date(event.date);
-        // Inactive Tab: Status is Inactive OR Date is in the past
-        return event.status === "Inactive" || eventDate < now;
-      });
-    }
-
-    filtered.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      // For Active, sort ascending (soonest first). For Inactive, sort descending (most recent past first).
-      return activeTab === "Active" ? dateA - dateB : dateB - dateA;
     });
+  }
 
-    return filtered;
-  };
+  fetchEvents(); // 👈 இதை கீழே define பண்ணுவோம்
+}, []);
+
+   const fetchEvents = async () => {
+  try {
+    setLoading(true);
+    const response = await getAllEvents();
+
+    if (response.data && response.data.success) {
+      setEvents(response.data.data);
+    } else if (Array.isArray(response.data)) {
+      setEvents(response.data);
+    } else {
+      setEvents([]);
+    }
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    setError("Failed to load events. Please try again later.");
+  } finally {
+    setLoading(false);
+  }
+};
+  // Filter and Sort Events
+ const getFilteredAndSortedEvents = () => {
+  let filtered = [...events];
+  const now = new Date();
+
+  // 1️⃣ Filter by Search
+  if (searchState.trim()) {
+    const query = searchState.toLowerCase();
+    filtered = filtered.filter(
+      (event) =>
+        (event.state && event.state.toLowerCase().includes(query)) ||
+        (event.location && event.location.toLowerCase().includes(query))
+    );
+  }
+
+  // 2️⃣ Filter by User Location (if no search input)
+  if (!searchState && userLocation?.state) {
+    filtered = filtered.filter((event) => {
+      const eventState = event.state?.toLowerCase() || "";
+      const eventLocation = event.location?.toLowerCase() || "";
+      const userState = userLocation.state.toLowerCase();
+      const userCity = userLocation.city.toLowerCase();
+
+      return eventState === userState || eventLocation === userCity;
+    });
+  }
+
+  // 3️⃣ Filter by Active/Inactive Tab
+  if (activeTab === "Active") {
+    filtered = filtered.filter((event) => {
+      const eventDate = new Date(event.date);
+      return event.status === "Active" && eventDate >= now;
+    });
+  } else {
+    filtered = filtered.filter((event) => {
+      const eventDate = new Date(event.date);
+      return event.status === "Inactive" || eventDate < now;
+    });
+  }
+
+  // 4️⃣ Sort
+  filtered.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return activeTab === "Active" ? dateA - dateB : dateB - dateA;
+  });
+
+  return filtered;
+};
 
   const displayedEvents = getFilteredAndSortedEvents();
 
@@ -198,7 +224,7 @@ const Events = () => {
           {userLocation && !searchState && (
             <div className="mt-[-20px] mb-6 flex items-center justify-center text-xs text-green-600 font-medium">
               <FaMapMarkerAlt className="mr-1" />
-              Location detected. Listing all events sorted by date.
+             Location detected. Showing events from your city & state.
             </div>
           )}
         </div>
@@ -216,27 +242,22 @@ const Events = () => {
                   className="bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 flex flex-col md:flex-row group"
                 >
                   {/* Image Container - Responsive sizing */}
-                  <div className="md:w-2/5 lg:w-1/3 relative overflow-hidden min-h-[250px] md:min-h-[auto]">
-                    <img
-                      src={
-                        event.image ||
-                        "https://via.placeholder.com/600x400?text=Event+Image"
-                      }
-                      alt={event.name}
-                      className={`absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out ${!isActiveTab ? "grayscale opacity-90" : ""}`}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:bg-none"></div>
-
-                    {/* Status Badge */}
-                    {isActiveTab ? (
-                      <span className="absolute top-4 left-4 bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                        ACTIVE
-                      </span>
-                    ) : (
-                      <span className="absolute top-4 left-4 bg-gray-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                        PAST / INACTIVE
-                      </span>
-                    )}
+                <div className="md:w-2/5 lg:w-1/3 relative h-auto flex-shrink-0">
+ <img
+  src={event.image || "https://via.placeholder.com/600x400?text=Event+Image"}
+  alt={event.name}
+  className="w-full h-auto object-contain rounded-l-2xl transition-transform duration-700 ease-out group-hover:scale-105"
+/>
+  {/* Status Badge */}
+  {activeTab === "Active" ? (
+    <span className="absolute top-4 left-4 bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+      ACTIVE
+    </span>
+  ) : (
+    <span className="absolute top-4 left-4 bg-gray-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+      PAST / INACTIVE
+    </span>
+  )}
 
                     {/* Mobile Only: Text Overlay for Title on Image */}
                     <div className="absolute bottom-4 left-4 right-4 md:hidden text-white">
@@ -382,12 +403,12 @@ const Events = () => {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start flex-col">
                   {selectedEvent.image && (
-                    <div className="w-full mb-4 overflow-hidden rounded-lg">
-                      <img
-                        src={selectedEvent.image}
-                        alt={selectedEvent.name}
-                        className="w-full h-auto object-cover max-h-[400px]"
-                      />
+                   <div className="w-full mb-4 rounded-lg">
+                     <img
+  src={selectedEvent.image}
+  alt={selectedEvent.name}
+  className="w-full h-auto object-contain"
+/>
                     </div>
                   )}
 

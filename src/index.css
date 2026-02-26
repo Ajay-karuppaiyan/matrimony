@@ -22,3 +22,19 @@
   animation: fadeIn 0.4s ease-out forwards;
 }
 
+
+
+/* userplansection */
+
+/* ALL CARDS DEFAULT WHITE */
+.pri-box {
+  background-color: #ffffff !important;
+}
+
+/* CENTER CARD */
+.pri-box-pop {
+  background-color: #ffffff !important;
+  transform: scale(1.08);
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}

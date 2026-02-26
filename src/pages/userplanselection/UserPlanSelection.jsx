@@ -7,7 +7,7 @@ import {
   sendPaymentData,
 } from "../../api/axiosService/userAuthService";
 import { useNavigate } from "react-router-dom";
-
+import "../../index.css";
 const UserPlanSelection = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -131,17 +131,17 @@ const UserPlanSelection = () => {
             paymentMethod: "razorpay",
             timestamp: new Date().toISOString(),
             planDetails: {
-  name: plan.name,
-  price: plan.price,
-  duration: plan.duration,
-  durationType: plan.durationType,
-  maxProfiles: plan.maxProfiles,
-  profilesType: plan.profilesType,
-  canViewProfiles: plan.canViewProfiles,
-  viewContactDetails: plan.viewContactDetails,
-  sendInterestRequest: plan.sendInterestRequest,
-  startChat: plan.startChat,
-}
+              name: plan.name,
+              price: plan.price,
+              duration: plan.duration,
+              durationType: plan.durationType,
+              maxProfiles: plan.maxProfiles,
+              profilesType: plan.profilesType,
+              canViewProfiles: plan.canViewProfiles,
+              viewContactDetails: plan.viewContactDetails,
+              sendInterestRequest: plan.sendInterestRequest,
+              startChat: plan.startChat,
+            }
 
           };
 
@@ -166,7 +166,7 @@ const UserPlanSelection = () => {
           console.error("Error processing payment:", error);
           alert(
             "Payment was successful but there was an issue processing it. Please contact support with your payment ID: " +
-              response.razorpay_payment_id
+            response.razorpay_payment_id
           );
         }
       },
@@ -212,9 +212,8 @@ const UserPlanSelection = () => {
     switch (featureType) {
       case "profiles":
         const formattedProfiles = formatNumber(plan.maxProfiles);
-        return `${formattedProfiles} Premium Profiles view /${
-          plan.profilesType === "Per month" ? "mo" : "total"
-        }`;
+        return `${formattedProfiles} Premium Profiles view /${plan.profilesType === "Per month" ? "mo" : "total"
+          }`;
       case "dailyLimit":
         const formattedDaily = formatNumber(plan.dailyLimit);
         return `${formattedDaily} per day limit`;
@@ -269,7 +268,7 @@ const UserPlanSelection = () => {
                 industry.{" "}
               </p>
               <span className="nocre">No credit card required</span>
-              
+
             </div>
           </div>
         </div>
@@ -283,126 +282,135 @@ const UserPlanSelection = () => {
               {/* Carousel Navigation - Only show if more than 3 plans */}
               {plans.length > 3 && (
                 <>
-                 {/* LEFT */}
-<button
-  onClick={prevSlide}
-  style={{
-    position: "absolute",
-    left: "-50px",
-    top: "50%",
-    transform: "translateY(-50%)",
-    zIndex: 10,
-    background: "#a020f0",
-    color: "white",
-    border: "none",
-    borderRadius: "50%",
-    width: "50px",
-    height: "50px",
-    fontSize: "22px",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-  }}
->
-  ←
-</button>
+                  {/* LEFT */}
+                  <button
+                    onClick={prevSlide}
+                    style={{
+                      position: "absolute",
+                      left: "-50px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      zIndex: 10,
+                      background: "#a020f0",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "50px",
+                      height: "50px",
+                      fontSize: "22px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                    }}
+                  >
+                    ←
+                  </button>
 
-{/* RIGHT */}
-<button
-  onClick={nextSlide}
-  style={{
-    position: "absolute",
-    right: "-50px",
-    top: "50%",
-    transform: "translateY(-50%)",
-    zIndex: 10,
-    background: "#a020f0",
-    color: "white",
-    border: "none",
-    borderRadius: "50%",
-    width: "50px",
-    height: "50px",
-    fontSize: "22px",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-  }}
->
-  →
-</button>
+                  {/* RIGHT */}
+                  <button
+                    onClick={nextSlide}
+                    style={{
+                      position: "absolute",
+                      right: "-50px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      zIndex: 10,
+                      background: "#a020f0",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "50px",
+                      height: "50px",
+                      fontSize: "22px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                    }}
+                  >
+                    →
+                  </button>
 
                 </>
               )}
 
               {/* Plans Display */}
               <ul>
-                {getCurrentPlans().map((plan, index) => (
-                  <li key={plan._id}>
-                    <div
-                      className={`pri-box ${
-                        plan.name === "Premium" || plan.name === "Gold"
-                          ? "pri-box-pop"
-                          : ""
-                      }`}
-                    >
-                      {(plan.name === "Premium" || plan.name === "Gold") && (
-                        <span className="pop-pln">Most popular plan</span>
-                      )}
-                      <h2>{plan.name}</h2>
-                      <p>Printer took a type and scrambled</p>
-                      <a
-                        href="#"
-                        className="cta"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handlePayment(plan);
-                        }}
-                      >
-                        Get Started
-                      </a>
-                      <span className="pri-cou">
-                        <b>₹{plan.price}</b>/
-                        {plan.durationType === "months"
-                          ? `${plan.duration}mo`
-                          : `${plan.duration}yr`}
-                      </span>
-                      <ol>
-                        <li>
-                          {renderFeatureIcon(
-                            plan.maxProfiles > 0 ? "Yes" : "No"
-                          )}
-                          {getFeatureText(plan, "profiles")}
-                        </li>
-                        {plan.dailyLimit && (
-                          <li>
-                            {renderFeatureIcon(plan.dailyLimit)}
-                            {getFeatureText(plan, "dailyLimit")}
-                          </li>
+                {getCurrentPlans().map((plan, index) => {
+
+                  const isMobile = window.innerWidth < 768;
+                  const isCenter = isMobile ? index === 0 : index === 1;
+
+                  return (
+                    <li key={plan._id}>
+                      <div className={`pri-box ${isCenter ? "pri-box-pop" : ""}`}>
+
+                        {isCenter && (
+                          <span className="pop-pln">Most popular plan</span>
                         )}
-                        <li>
-                          {renderFeatureIcon(plan.canViewProfiles)}
-                          {getFeatureText(plan, "viewProfiles")}
-                        </li>
-                        <li>
-                          {renderFeatureIcon(plan.viewContactDetails)}
-                          {getFeatureText(plan, "contactDetails")}
-                        </li>
-                        <li>
-                          {renderFeatureIcon(plan.sendInterestRequest)}
-                          {getFeatureText(plan, "sendInterest")}
-                        </li>
-                        <li>
-                          {renderFeatureIcon(plan.startChat)}
-                          {getFeatureText(plan, "startChat")}
-                        </li>
-                      </ol>
-                    </div>
-                  </li>
-                ))}
+
+                        <h2>{plan.name}</h2>
+                        <p>Printer took a type and scrambled</p>
+
+                        <a
+                          href="#"
+                          className="cta"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePayment(plan);
+                          }}
+                        >
+                          Get Started
+                        </a>
+
+                        <span className="pri-cou">
+                          <b>₹{plan.price}</b>/
+                          {plan.durationType === "months"
+                            ? `${plan.duration}mo`
+                            : `${plan.duration}yr`}
+                        </span>
+
+                        <ol>
+                          <li>
+                            {renderFeatureIcon(plan.maxProfiles > 0 ? "Yes" : "No")}
+                            {getFeatureText(plan, "profiles")}
+                          </li>
+
+                          {plan.dailyLimit && (
+                            <li>
+                              {renderFeatureIcon(plan.dailyLimit)}
+                              {getFeatureText(plan, "dailyLimit")}
+                            </li>
+                          )}
+
+                          <li>
+                            {renderFeatureIcon(plan.canViewProfiles)}
+                            {getFeatureText(plan, "viewProfiles")}
+                          </li>
+
+                          <li>
+                            {renderFeatureIcon(plan.viewContactDetails)}
+                            {getFeatureText(plan, "contactDetails")}
+                          </li>
+
+                          <li>
+                            {renderFeatureIcon(plan.sendInterestRequest)}
+                            {getFeatureText(plan, "sendInterest")}
+                          </li>
+
+                          <li>
+                            {renderFeatureIcon(plan.startChat)}
+                            {getFeatureText(plan, "startChat")}
+                          </li>
+                        </ol>
+
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
 
               {/* Carousel Dots - Only show if more than 3 plans */}
