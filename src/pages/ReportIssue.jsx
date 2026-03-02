@@ -228,10 +228,239 @@
 // export default ReportIssue;
 
 
+// import React, { useEffect, useState } from "react";
+// import LayoutComponent from "../components/layouts/LayoutComponent";
+// import Footer from "../components/Footer";
+// import { getUserProfile,reportIssue  } from "../api/axiosService/userAuthService";
+
+// const ReportIssue = () => {
+//   const userId = localStorage.getItem("userId");
+
+//   const [formData, setFormData] = useState({
+//     userName: "",
+//     userEmail: "",
+//     userMobile: "",
+//     agwid: "",
+//     details: "",
+//     attachment: null,
+//   });
+
+//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+//   useEffect(() => {
+//     if (userId) {
+//       setIsLoggedIn(true);
+
+//       const fetchUser = async () => {
+//         try {
+//           const res = await getUserProfile(userId);
+//           if (res.status === 200) {
+//             const data = res.data.data;
+//             setFormData((prev) => ({
+//               ...prev,
+//               userName: data.userName || "",
+//               userEmail: data.userEmail || "",
+//               userMobile: data.userMobile || "",
+//               agwid: data.agwid || "",
+//             }));
+//           }
+//         } catch (err) {
+//           console.error("Error fetching user:", err);
+//         }
+//       };
+
+//       fetchUser();
+//     }
+//   }, [userId]);
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData({ ...formData, [name]: value });
+//   };
+
+//   const handleFileChange = (e) => {
+//     setFormData({ ...formData, attachment: e.target.files[0] });
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+
+//     if (!isLoggedIn) {
+//       alert("Please login to report an issue");
+//       return;
+//     }
+
+//     console.log("Form Data:", formData);
+//   };
+
+//   return (
+//     <div className="bg-gray-50 min-h-screen">
+//       {/* Header */}
+//       <div className="fixed top-0 left-0 right-0 z-50">
+//         <LayoutComponent />
+//       </div>
+
+//       <div className="pt-28">
+
+//         {/* ===================== */}
+//         {/* 1️⃣ BANNER BLOCK */}
+//         {/* ===================== */}
+//        <section className="bg-gray-600 text-white py-20">
+//           <div className="max-w-6xl mx-auto px-4 text-center">
+//             <span className="bg-white text-purple-600 px-4 py-1 rounded-full text-sm font-semibold">
+//               #1 Support Center
+//             </span>
+
+//           <h1 className="text-5xl md:text-6xl font-extrabold mt-6 text-purple-500">
+//   Report & Issue
+// </h1>
+
+//             <p className="mt-4 text-lg text-purple-100 max-w-2xl mx-auto">
+//               Facing a problem? Let us know and we’ll fix it quickly and efficiently.
+//             </p>
+//           </div>
+//         </section>
+
+       
+
+
+//         {/* ===================== */}
+//         {/* 2️⃣ FORM BLOCK */}
+//         {/* ===================== */}
+//         <section className="py-20 px-4">
+//           {!isLoggedIn ? (
+//             <div className="text-center text-red-600 font-semibold text-lg">
+//               Please login to report an issue.
+//             </div>
+//           ) : (
+//             <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-10 border border-gray-100">
+
+//               <h2 className="text-2xl font-semibold mb-10 text-gray-800 text-center">
+//                 Submit Your Issue
+//               </h2>
+
+//               <form onSubmit={handleSubmit} className="space-y-8">
+
+//                 {/* User Info Section */}
+//                 <div className="grid md:grid-cols-2 gap-6">
+
+//                   <div>
+//                     <label className="text-sm font-medium text-gray-600">
+//                       Username
+//                     </label>
+//                     <input
+//                       type="text"
+//                       value={formData.userName}
+//                       disabled
+//                       className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
+//                     />
+//                   </div>
+
+//                   <div>
+//                     <label className="text-sm font-medium text-gray-600">
+//                       User ID
+//                     </label>
+//                     <input
+//                       type="text"
+//                       value={formData.agwid}
+//                       disabled
+//                       className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
+//                     />
+//                   </div>
+
+//                   <div>
+//                     <label className="text-sm font-medium text-gray-600">
+//                       Email
+//                     </label>
+//                     <input
+//                       type="email"
+//                       value={formData.userEmail}
+//                       disabled
+//                       className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
+//                     />
+//                   </div>
+
+//                   <div>
+//                     <label className="text-sm font-medium text-gray-600">
+//                       Phone Number
+//                     </label>
+//                     <input
+//                       type="text"
+//                       value={formData.userMobile}
+//                       disabled
+//                       className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
+//                     />
+//                   </div>
+//                 </div>
+
+//                 {/* Issue Details */}
+//                 <div>
+//                   <label className="text-sm font-medium text-gray-600">
+//                     Issue Details
+//                   </label>
+//                   <textarea
+//                     name="details"
+//                     value={formData.details}
+//                     onChange={handleChange}
+//                     rows="5"
+//                     required
+//                     placeholder="Explain your issue clearly..."
+//                     className="w-full mt-2 px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none"
+//                   />
+//                 </div>
+
+//                 {/* File Upload */}
+//                 <div>
+//                   <label className="text-sm font-medium text-gray-600">
+//                     Attachment
+//                   </label>
+
+//                   <div className="mt-3 flex items-center gap-4">
+//                     <label className="cursor-pointer bg-gray-100 px-6 py-3 rounded-xl border hover:bg-gray-200 text-sm transition">
+//                       Choose File
+//                       <input
+//                         type="file"
+//                         onChange={handleFileChange}
+//                         className="hidden"
+//                       />
+//                     </label>
+
+//                     <span className="text-sm text-gray-500">
+//                       {formData.attachment
+//                         ? formData.attachment.name
+//                         : "No file selected"}
+//                     </span>
+//                   </div>
+//                 </div>
+
+//                 {/* Submit Button */}
+//                 <div className="flex justify-end pt-6">
+//                   <button
+//                     type="submit"
+//                     className="bg-purple-600 text-white px-10 py-3 rounded-xl font-medium hover:bg-purple-700 transition shadow-md"
+//                   >
+//                     Submit Issue 🚀
+//                   </button>
+//                 </div>
+
+//               </form>
+//             </div>
+//           )}
+//         </section>
+
+//       </div>
+
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default ReportIssue;
+
 import React, { useEffect, useState } from "react";
 import LayoutComponent from "../components/layouts/LayoutComponent";
 import Footer from "../components/Footer";
-import { getUserProfile } from "../api/axiosService/userAuthService";
+import { getUserProfile, reportIssue } from "../api/axiosService/userAuthService";
 
 const ReportIssue = () => {
   const userId = localStorage.getItem("userId");
@@ -282,7 +511,7 @@ const ReportIssue = () => {
     setFormData({ ...formData, attachment: e.target.files[0] });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isLoggedIn) {
@@ -291,29 +520,63 @@ const ReportIssue = () => {
     }
 
     console.log("Form Data:", formData);
+
+    try {
+      const data = new FormData();
+
+      // ✅ FIX: add userId (VERY IMPORTANT)
+      data.append("userId", userId);
+
+      data.append("userName", formData.userName);
+      data.append("userEmail", formData.userEmail);
+      data.append("userMobile", formData.userMobile);
+      data.append("agwid", formData.agwid);
+      data.append("details", formData.details);
+
+      if (formData.attachment) {
+        data.append("attachment", formData.attachment);
+      }
+
+      const res = await reportIssue(data);
+
+      if (res.status === 200 || res.status === 201) {
+        alert("Issue submitted successfully ✅");
+
+        setFormData((prev) => ({
+          ...prev,
+          details: "",
+          attachment: null,
+        }));
+      }
+    } catch (error) {
+      console.error("Error submitting issue:", error);
+
+      // ✅ Better debug
+      if (error.response) {
+        console.log("Server Error:", error.response.data);
+      }
+
+      alert("Something went wrong ❌");
+    }
   };
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Header */}
       <div className="fixed top-0 left-0 right-0 z-50">
         <LayoutComponent />
       </div>
 
       <div className="pt-28">
 
-        {/* ===================== */}
-        {/* 1️⃣ BANNER BLOCK */}
-        {/* ===================== */}
-       <section className="bg-gray-600 text-white py-20">
+        <section className="bg-gray-600 text-white py-20">
           <div className="max-w-6xl mx-auto px-4 text-center">
             <span className="bg-white text-purple-600 px-4 py-1 rounded-full text-sm font-semibold">
               #1 Support Center
             </span>
 
-          <h1 className="text-5xl md:text-6xl font-extrabold mt-6 text-purple-500">
-  Report & Issue
-</h1>
+            <h1 className="text-5xl md:text-6xl font-extrabold mt-6 text-purple-500">
+              Report & Issue
+            </h1>
 
             <p className="mt-4 text-lg text-purple-100 max-w-2xl mx-auto">
               Facing a problem? Let us know and we’ll fix it quickly and efficiently.
@@ -321,12 +584,6 @@ const ReportIssue = () => {
           </div>
         </section>
 
-       
-
-
-        {/* ===================== */}
-        {/* 2️⃣ FORM BLOCK */}
-        {/* ===================== */}
         <section className="py-20 px-4">
           {!isLoggedIn ? (
             <div className="text-center text-red-600 font-semibold text-lg">
@@ -341,7 +598,6 @@ const ReportIssue = () => {
 
               <form onSubmit={handleSubmit} className="space-y-8">
 
-                {/* User Info Section */}
                 <div className="grid md:grid-cols-2 gap-6">
 
                   <div>
@@ -393,7 +649,6 @@ const ReportIssue = () => {
                   </div>
                 </div>
 
-                {/* Issue Details */}
                 <div>
                   <label className="text-sm font-medium text-gray-600">
                     Issue Details
@@ -409,7 +664,6 @@ const ReportIssue = () => {
                   />
                 </div>
 
-                {/* File Upload */}
                 <div>
                   <label className="text-sm font-medium text-gray-600">
                     Attachment
@@ -433,7 +687,6 @@ const ReportIssue = () => {
                   </div>
                 </div>
 
-                {/* Submit Button */}
                 <div className="flex justify-end pt-6">
                   <button
                     type="submit"

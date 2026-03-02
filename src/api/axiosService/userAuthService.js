@@ -290,3 +290,21 @@ export const updateAgvid = async (userId) => {
     throw error;
   }
 };
+
+export const reportIssue = async (formData) => {
+  try {
+    const response = await userInstance.post(
+      `/report-issue`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error reporting issue:", error);
+    throw error;
+  }
+};

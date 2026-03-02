@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { getAllEvents } from "../../api/axiosService/userSignUpService";
 import LayoutComponent from "../../components/layouts/LayoutComponent";
+import Footer from "../../components/Footer";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -513,6 +514,8 @@ const Events = () => {
           </div>
         </div>
       )}
+
+       <Footer />
     </div>
   );
 };
