@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import LayoutComponent from "../../components/layouts/LayoutComponent";
-import { useParams } from "react-router-dom";
-import { getTheProfieMoreDetails } from "../../api/axiosService/userAuthService";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { getTheProfieMoreDetails, getUserProfile, getChatMessages, sendChatMessage } from "../../api/axiosService/userAuthService";
+import { io } from "socket.io-client";
+import ChatUi from "../allprofile/ChatUi";
 import Footer from "../../components/Footer";
 import CopyRights from "../../components/CopyRights";
 import RelatedProfiles from "./RelatedProfiles";
@@ -15,26 +19,95 @@ const MoreDetails = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  const userId = localStorage.getItem("userId");
+  const baseUrl = import.meta.env.VITE_BASE_ROUTE;
+  const navigate = useNavigate();
+
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      const response = await getTheProfieMoreDetails(profileId, userId);
+
+      if (response.status === 200) {
+        setProfileData(response.data.data);
+
+        // ✅ 🔥 IMPORTANT (PLAN UPDATE TRIGGER)
+        window.dispatchEvent(new Event("planUpdated"));
+      } else {
+        setError("Failed to fetch profile data");
+      }
+
+    } catch (err) {
+      const errorMsg = err.response?.data?.message;
+      const statusCode = err.response?.status;
+
+      // ✅ LIMIT REACHED HANDLE
+      if (statusCode === 403 && errorMsg?.includes("limit")) {
+        toast.error(errorMsg, { position: "top-center", autoClose: 3000 });
+
+        setTimeout(() => navigate(-1), 1500);
+      } else {
+        setError(errorMsg || "Error fetching profile data");
+      }
+
+      console.error("Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [profileId, userId, navigate]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getTheProfieMoreDetails(profileId);
-        if (response.status === 200) {
-          setProfileData(response.data.data);
-        } else {
-          setError("Failed to fetch profile data");
-        }
-      } catch (err) {
-        setError("Error fetching profile data");
-        console.error("Error:", err);
-      } finally {
-        setLoading(false);
-      }
+    if (!userId || !baseUrl) return;
+    const newSocket = io(baseUrl, {
+      query: { userId },
+      transports: ["websocket", "polling"],
+    });
+
+    newSocket.on("connect", () => {
+      setSocket(newSocket);
+    });
+
+    newSocket.on("receive_message", (message) => {
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          id: message.id,
+          senderId: message.senderId,
+          sender: message.senderId === userId ? "user" : "profile",
+          text: message.text,
+          message: message.text,
+          timestamp: new Date(message.timestamp).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
+    });
+
+    newSocket.on("users_online", (userIds) => {
+      setOnlineUsers(userIds);
+    });
+
+    newSocket.on("user_joined", (joinedUserId) => {
+      setOnlineUsers((prev) => [...prev, joinedUserId]);
+    });
+
+    newSocket.on("user_left", (leftUserId) => {
+      setOnlineUsers((prev) => prev.filter((id) => id !== leftUserId));
+    });
+
+    return () => {
+      newSocket.close();
     };
-    fetchData();
-  }, [profileId]);
+  }, [userId, baseUrl]);
 
   // Calculate age from date of birth
   const calculateAge = (dateOfBirth) => {
@@ -64,36 +137,64 @@ const MoreDetails = () => {
   };
 
   // Handle chat submission
-  const handleChatSubmit = (e) => {
+  const handleChatSubmit = async (e) => {
     e.preventDefault();
-    if (newMessage.trim() === "") return;
+    if (!newMessage.trim() || !profileData?._id) return;
 
-    const message = {
-      id: Date.now(),
-      text: newMessage,
-      sender: "user",
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+    try {
+      const messageData = {
+        id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        text: newMessage,
+        senderId: userId,
+        recipientId: profileData._id,
+        roomId: `chat_${[userId, profileData._id].sort().join("_")}`,
+        timestamp: new Date().toISOString(),
+      };
 
-    setChatMessages([...chatMessages, message]);
-    setNewMessage("");
-
-    // Simulate reply after 1 second
-    setTimeout(() => {
-      const reply = {
-        id: Date.now() + 1,
-        text: "Thanks for your message!",
-        sender: "profile",
+      const tempMessage = {
+        id: messageData.id,
+        senderId: userId,
+        sender: "user",
+        text: newMessage,
+        message: newMessage,
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         }),
       };
-      setChatMessages((prev) => [...prev, reply]);
-    }, 1000);
+      
+      setChatMessages((prev) => [...prev, tempMessage]);
+
+      if (socket) {
+        socket.emit("send_message", messageData);
+      }
+
+      await sendChatMessage(userId, tempMessage, profileData._id);
+      setNewMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleStartChat = async () => {
+    try {
+      const response = await getUserProfile(userId);
+      const currentUser = response?.data?.data;
+      
+      const isPaidUser = currentUser && currentUser.isAnySubscriptionTaken && currentUser.paymentDetails?.some(p => p.subscriptionStatus?.toLowerCase() === "active");
+      
+      if (isPaidUser) {
+        setIsChatOpen(true);
+        if (socket && profileData?._id) {
+          const roomId = `chat_${[userId, profileData._id].sort().join("_")}`;
+          socket.emit("join_chat_room", { roomId });
+        }
+      } else {
+        alert("Please subscribe to your plan.");
+      }
+    } catch (error) {
+      alert("Please subscribe to your plan.");
+    }
   };
 
   if (loading) {
@@ -116,6 +217,7 @@ const MoreDetails = () => {
         <div className="error-container">
           <p>{error || "Profile not found"}</p>
         </div>
+        <ToastContainer />
         <Footer />
         <CopyRights />
       </>
@@ -154,9 +256,9 @@ const MoreDetails = () => {
                   <div className="s3">
                     <button
                       className="cta fol cta-chat"
-                      onClick={() => setIsChatOpen(!isChatOpen)}
+                      onClick={handleStartChat}
                     >
-                      Chat now
+                      Start Chat
                     </button>
                     <span
                       className="cta cta-sendint"
@@ -516,64 +618,22 @@ const MoreDetails = () => {
 
       <ShowInterest />
 
-      {isChatOpen && (
-        <div className="chatbox active">
-          <span
-            className="comm-msg-pop-clo"
-            onClick={() => setIsChatOpen(false)}
-          >
-            <i className="fa fa-times" aria-hidden="true" />
-          </span>
-          <div className="inn">
-            <form onSubmit={handleChatSubmit}>
-              <div className="s1">
-                <img
-                  src={profileData.profileImage || "images/profiles/2.jpg"}
-                  className="intephoto2"
-                  alt=""
-                />
-                <h4>
-                  <b>{profileData.userName || "User"},</b>
-                </h4>
-                <span className="avlsta avilyes">Available online</span>
-              </div>
-              <div className="s2 chat-box-messages">
-                {chatMessages.length === 0 ? (
-                  <span className="chat-wel">Start a new chat!!! now</span>
-                ) : (
-                  <div className="chat-con">
-                    {chatMessages.map((message) => (
-                      <div
-                        key={message.id}
-                        className={`chat-${
-                          message.sender === "user" ? "rhs" : "lhs"
-                        }`}
-                      >
-                        {message.text}
-                        <span className="message-time">
-                          {message.timestamp}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="s3">
-                <input
-                  type="text"
-                  name="chat_message"
-                  placeholder="Type a message here.."
-                  required
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                />
-                <button id="chat_send1" name="chat_send" type="submit">
-                  Send <i className="fa fa-paper-plane-o" aria-hidden="true" />
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {isChatOpen && profileData && (
+        <ChatUi
+          setIsChatOpen={setIsChatOpen}
+          handleChatSubmit={handleChatSubmit}
+          profileData={{
+            userName: profileData.userName,
+            profileImage: profileData.profileImage || "images/profiles/2.jpg",
+            receiverId: profileData._id,
+            isOnline: onlineUsers.includes(profileData._id),
+          }}
+          chatMessages={chatMessages}
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+          socket={socket}
+          userId={userId}
+        />
       )}
 
       <Footer />

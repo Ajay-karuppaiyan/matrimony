@@ -371,6 +371,7 @@ const UserChatPage = () => {
           setNewMessage={setNewMessage}
           socket={socket}
           userId={userId}
+          setChatMessages={setMessages}
         />
       )}
     </div>

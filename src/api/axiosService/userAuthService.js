@@ -35,9 +35,10 @@ export const fetchAllUserProfilesHome = async () => {
 };
 
 export const getTheProfieMoreDetails = async (userId, viewerId) => {
-  let url = `/get-profile-more-information/${userId}`;
+  const timestamp = new Date().getTime();
+  let url = `/get-profile-more-information/${userId}?t=${timestamp}`;
   if (viewerId) {
-    url += `?viewerId=${viewerId}`;
+    url += `&viewerId=${viewerId}`;
   }
   const response = await userInstance.get(url);
   return response;
@@ -96,8 +97,9 @@ export const sendPaymentData = async (paymentData, userId) => {
 };
 
 export const getMyActivePlanData = async (userId) => {
+  const timestamp = new Date().getTime();
   const response = await userInstance.get(
-    `/get-my-active-plan-details/${userId}`
+    `/get-my-active-plan-details/${userId}?t=${timestamp}`
   );
   return response;
 };

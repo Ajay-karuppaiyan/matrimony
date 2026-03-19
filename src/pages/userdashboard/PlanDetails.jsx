@@ -214,7 +214,7 @@
 //       </div>
 //     </div>
 //   );
-  
+
 // };
 
 // export default PlanDetails;
@@ -294,6 +294,22 @@ const PlanDetails = () => {
       month: "short",
       year: "numeric",
     });
+  };
+
+  const getRemainingDays = (validFrom, validTo) => {
+    const startDate = parseDate(validFrom);
+    const endDate = parseDate(validTo);
+
+    if (!startDate || !endDate) return "N/A";
+
+    const today = new Date();
+
+    const diffTime = endDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 0) return "Expired";
+
+    return diffDays;
   };
 
   if (loading) {
@@ -417,6 +433,15 @@ const PlanDetails = () => {
             <li>
               Valid till:{" "}
               <strong>{formatDate(planData.subscriptionValidTo)}</strong>
+            </li>
+            <li>
+              Remaining Days:{" "}
+              <strong>
+                {getRemainingDays(
+                  planData.subscriptionValidFrom,
+                  planData.subscriptionValidTo
+                )} days
+              </strong>
             </li>
             <li>
               <a href="/user/user-plan-selection" className="cta-3">

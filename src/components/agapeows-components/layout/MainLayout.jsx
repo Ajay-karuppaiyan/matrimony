@@ -335,13 +335,15 @@ const MainLayout = () => {
               >
                 ABOUT US
               </button>
-              <button
-                onClick={() => handleNavigate("/user/find-matches")}
-                className="group flex items-center space-x-2 text-gray-800 font-medium transition-colors duration-200"
-              >
-                <Search className="w-4 h-4 text-gray-800 group-hover:text-purple-600" />
-                <span className="group-hover:text-purple-600">SEARCH</span>
-              </button>
+              {isUserActive && (
+  <button
+    onClick={() => handleNavigate("/user/find-matches")}
+    className="group flex items-center space-x-2 text-gray-800 font-medium transition-colors duration-200"
+  >
+    <Search className="w-4 h-4 text-gray-800 group-hover:text-purple-600" />
+    <span className="group-hover:text-purple-600">SEARCH</span>
+  </button>
+)}
               <div
                 className="relative"
                 onMouseEnter={() => setIsExploreDropdownVisible(true)}

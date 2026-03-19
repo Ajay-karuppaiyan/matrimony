@@ -72,14 +72,22 @@ const ChatUi = ({
   setNewMessage,
   socket,
   userId,
+  setChatMessages, // NEW PROP
+  onBlockUser,     // NEW PROP
 }) => {
   console.log(chatMessages)
   const messagesEndRef = useRef(null);
   const [isTyping, setIsTyping] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchMode, setSearchMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterMode, setFilterMode] = useState(null);
+
   const typingTimeoutRef = useRef(null);
   const emojiPickerRef = useRef(null);
+  const menuRef = useRef(null);
 
   const roomId = `chat_${[userId, profileData.receiverId].sort().join("_")}`;
 
@@ -88,7 +96,6 @@ const ChatUi = ({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
-  // Close emoji picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -97,16 +104,20 @@ const ChatUi = ({
       ) {
         setShowEmojiPicker(false);
       }
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target)
+      ) {
+        setIsMenuOpen(false);
+      }
     };
 
-    if (showEmojiPicker) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showEmojiPicker]);
+  }, []);
 
   // Socket event listeners
   useEffect(() => {
@@ -203,7 +214,37 @@ const ChatUi = ({
     ]
   );
 
-  console.log("chatMessages", chatMessages);
+  const displayedMessages = chatMessages ? chatMessages.filter(msg => {
+    if (searchMode && searchQuery) {
+      if (!msg.text?.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    }
+    if (filterMode === 'media') {
+      const hasLink = msg.text?.match(/https?:\/\/[^\s]+/) || msg.text?.match(/\.(jpeg|jpg|gif|png|pdf|doc|docx)/i);
+      return hasLink;
+    }
+    return true;
+  }) : [];
+
+  const handleClearChat = () => {
+    if (window.confirm("Are you sure you want to clear this entire chat history?")) {
+      if (setChatMessages) {
+        setChatMessages([]);
+      }
+      setIsMenuOpen(false);
+    }
+  };
+
+  const handleBlockAction = () => {
+    if (window.confirm("Are you sure you want to block this user?")) {
+      if (onBlockUser) {
+        onBlockUser(profileData.receiverId);
+      } else {
+        alert("User blocked! They will appear in the Blocked section.");
+      }
+      setIsMenuOpen(false);
+      setIsChatOpen(false);
+    }
+  };
 
   return (
     <div
@@ -291,6 +332,64 @@ const ChatUi = ({
           </span>
         </div>
 
+        <div style={{ position: "relative", display: "flex", gap: "10px" }} ref={menuRef}>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: "4px",
+              color: "#999",
+              fontSize: "18px",
+            }}
+          >
+            ⋮
+          </button>
+          
+          {isMenuOpen && (
+            <div style={{
+              position: "absolute",
+              top: "100%",
+              right: "0",
+              background: "white",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              zIndex: 1000,
+              minWidth: "160px",
+              overflow: "hidden",
+            }}>
+              <div 
+                style={{ padding: "10px 14px", cursor: "pointer", borderBottom: "1px solid #eee", fontSize: "14px", color: "#d32f2f", fontWeight: "600" }}
+                onClick={handleBlockAction}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >Block</div>
+              <div 
+                style={{ padding: "10px 14px", cursor: "pointer", borderBottom: "1px solid #eee", fontSize: "14px", color: "#333" }}
+                onClick={handleClearChat}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >Clear Chat</div>
+              <div 
+                style={{ padding: "10px 14px", cursor: "pointer", borderBottom: "1px solid #eee", fontSize: "14px", color: "#333" }}
+                onClick={() => { setIsMenuOpen(false); setSearchMode(true); }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >Search Chat</div>
+              <div 
+                style={{ padding: "10px 14px", cursor: "pointer", fontSize: "14px", color: "#333", backgroundColor: filterMode === 'media' ? '#e3f2fd' : 'transparent' }}
+                onClick={() => { setIsMenuOpen(false); setFilterMode(filterMode === 'media' ? null : 'media'); }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = filterMode === 'media' ? '#e3f2fd' : '#f9f9f9'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = filterMode === 'media' ? '#e3f2fd' : 'transparent'}
+              >
+                {filterMode === 'media' ? 'Show All Messages' : 'Media, Links & Docs'}
+              </div>
+            </div>
+          )}
+        </div>
+
         <button
           onClick={() => setIsChatOpen(false)}
           style={{
@@ -306,6 +405,22 @@ const ChatUi = ({
         </button>
       </div>
 
+      {/* Search Bar Area */}
+      {searchMode && (
+        <div style={{ padding: "10px 16px", backgroundColor: "#eef2f5", display: "flex", gap: "8px", alignItems: "center", borderBottom: "1px solid #e1e5e9" }}>
+          <i className="fa fa-search" style={{ color: "#999" }}></i>
+          <input 
+            type="text" 
+            placeholder="Search within chat..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ flex: 1, padding: "6px 12px", borderRadius: "20px", border: "1px solid #ccc", outline: "none", fontSize: "13px" }}
+            autoFocus
+          />
+          <button onClick={() => { setSearchMode(false); setSearchQuery(""); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#666" }}>✕</button>
+        </div>
+      )}
+
       {/* Messages Area */}
       <div
         style={{
@@ -316,7 +431,7 @@ const ChatUi = ({
           position: "relative",
         }}
       >
-        {chatMessages.length === 0 ? (
+        {displayedMessages.length === 0 ? (
           <div
             style={{
               display: "flex",
@@ -343,7 +458,7 @@ const ChatUi = ({
           </div>
         ) : (
           <div>
-            {chatMessages.map((message) => (
+            {displayedMessages.map((message) => (
               <div
                 key={message.id}
                 style={{

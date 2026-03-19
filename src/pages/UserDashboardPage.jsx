@@ -12,6 +12,7 @@ import PlanDetails from "./userdashboard/PlanDetails";
 import ProfileCompletion from "./userdashboard/ProfileCompletion";
 import RecentChats from "./userdashboard/RecentChats";
 import DashboardSearchComponent from "./userdashboard/DashboardSearchComponent";
+import ActivePlanCard from "./userdashboard/ActivePlanCard";
 
 const UserDashboardPage = () => {
   const navigate = useNavigate();
@@ -445,6 +446,7 @@ const UserDashboardPage = () => {
                 <div className="row">
                   <ProfileCompletion userData={userInfo} />
                   <PlanDetails />
+                  <ActivePlanCard/>
                   <RecentChats />
                 </div>
               </div>

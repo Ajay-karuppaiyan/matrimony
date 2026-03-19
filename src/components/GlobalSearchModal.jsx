@@ -616,12 +616,21 @@ const GlobalSearchModal = () => {
                 <div className="bg-white rounded-lg shadow-md">
                   <div className="p-3 md:p-4">
                     {/* Heading */}
-                    <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-                      <Search className="w-5 h-5 text-purple-600" />
-                      <h1 className="text-xl font-bold text-gray-900">
-                        Find Your Match
-                      </h1>
-                    </div>
+                   <div className="flex items-center justify-between pb-4 border-b border-gray-200 mb-6">
+  <div className="flex items-center gap-3">
+    <div className="bg-purple-100 p-2 rounded-lg">
+      <Search className="w-5 h-5 text-purple-600" />
+    </div>
+    <div>
+      <h1 className="text-xl font-semibold text-gray-900">
+        Find Your Match
+      </h1>
+      <p className="text-xs text-gray-500">
+        Search profiles based on your preferences
+      </p>
+    </div>
+  </div>
+</div>
 
                     {/* Search by AGWID ID */}
                     <div className="flex justify-center mb-3">
@@ -654,13 +663,14 @@ const GlobalSearchModal = () => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 border-b border-gray-200 mb-3">
+                   <div className="grid grid-cols-3 bg-gray-100 rounded-lg p-1 mb-6">
                       <button
-                        className={`py-3 text-center text-xs md:text-sm font-medium transition-all px-1 h-full flex items-center justify-center ${
-                          activeTab === "quick"
-                            ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white"
-                            : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                        }`}
+                       className={`py-2 text-sm font-medium rounded-md transition-all
+${
+activeTab === "quick"
+?"bg-gradient-to-r from-pink-500 to-purple-600 text-white"
+: "bg-gray-50 text-gray-600 hover:bg-gray-100"
+}`}
                         onClick={() => setActiveTab("quick")}
                       >
                         Quick Search

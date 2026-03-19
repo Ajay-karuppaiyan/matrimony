@@ -2,6 +2,9 @@ import React, { useState, useRef } from "react";
 import { sendInterestData } from "../../api/axiosService/userAuthService";
 
 const ShowInterest = ({ selectedUser, userId, onSuccess }) => {
+    const senderId = localStorage.getItem("userId");
+  console.log("ShowInterest component rendered with selectedUser:", selectedUser);
+  console.log("ShowInterest component rendered with senderId:", senderId);
   const modalRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPermissions, setSelectedPermissions] = useState({
@@ -36,10 +39,10 @@ const ShowInterest = ({ selectedUser, userId, onSuccess }) => {
         timestamp: new Date().toISOString(),
       };
 
-      console.log("Sending interest data:", interestData); // Debug log
+      console.log("Sending interest datas:", interestData, senderId); // Debug log
 
       // Call the parent function with the data
-      await sendInterestData(interestData, userId);
+      await sendInterestData(interestData, senderId);
 
       // Show success message
       alert("Interest sent successfully!");

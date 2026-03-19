@@ -472,6 +472,31 @@ const UserPlanPage = () => {
     return new Date(date).toDateString();
   };
 
+  const parseCustomDate = (dateString) => {
+  if (!dateString) return null;
+
+  const [datePart] = dateString.split(",");
+  const [day, month, year] = datePart.trim().split("/");
+
+  return new Date(`${year}-${month}-${day}`);
+};
+
+const getRemainingDays = (validFrom, validTo) => {
+  const startDate = parseCustomDate(validFrom);
+  const endDate = parseCustomDate(validTo);
+
+  if (!startDate || !endDate) return "-";
+
+  const today = new Date();
+
+  const diffTime = endDate - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) return "Expired";
+
+  return diffDays;
+};
+
   // =========================
   // ✅ UI
   // =========================
@@ -521,20 +546,29 @@ const UserPlanPage = () => {
                         ) : (
                           <ul>
                             <li>
-                              Plan name: <strong>{planData.subscriptionType}</strong>
+                              Plan Name: <strong>{planData.subscriptionType}</strong>
                             </li>
                             <li>
-                              Valid from: <strong>{planData.subscriptionValidFrom}</strong>
+                              Valid From: <strong>{planData.subscriptionValidFrom}</strong>
                             </li>
                             <li>
-                              Valid till: <strong>{planData.subscriptionValidTo}</strong>
+                              Valid Till: <strong>{planData.subscriptionValidTo}</strong>
                             </li>
+                            <li>
+  Remaining Days:{" "}
+  <strong>
+    {getRemainingDays(
+      planData.subscriptionValidFrom,
+      planData.subscriptionValidTo
+    )} days
+  </strong>
+</li>
                             <li>
                               Amount: <strong>₹{planData.subscriptionAmount}</strong>
                             </li>
                             <li>
                               <a href="/user/user-plan-selection" className="cta-3">
-                                Upgrade now
+                                Upgrade Now
                               </a>
                             </li>
                           </ul>

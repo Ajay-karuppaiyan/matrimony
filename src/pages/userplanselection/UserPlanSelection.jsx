@@ -137,6 +137,7 @@ const UserPlanSelection = () => {
               durationType: plan.durationType,
               maxProfiles: plan.maxProfiles,
               profilesType: plan.profilesType,
+              dailyLimit: plan.dailyLimit,
               canViewProfiles: plan.canViewProfiles,
               viewContactDetails: plan.viewContactDetails,
               sendInterestRequest: plan.sendInterestRequest,
