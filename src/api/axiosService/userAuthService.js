@@ -34,12 +34,22 @@ export const fetchAllUserProfilesHome = async () => {
   return response;
 };
 
-export const getTheProfieMoreDetails = async (userId, viewerId) => {
+export const getTheProfieMoreDetails = async (profileId, viewerId) => {
   const timestamp = new Date().getTime();
-  let url = `/get-profile-more-information/${userId}?t=${timestamp}`;
-  if (viewerId) {
+
+  let url = `/get-profile-more-information/${profileId}?t=${timestamp}`;
+
+  // ✅ Strict validation
+  if (
+    viewerId &&
+    viewerId !== "undefined" &&
+    viewerId !== "null"
+  ) {
     url += `&viewerId=${viewerId}`;
   }
+
+  console.log("✅ API CALL:", url);
+
   const response = await userInstance.get(url);
   return response;
 };

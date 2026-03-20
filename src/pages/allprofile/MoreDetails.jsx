@@ -1752,6 +1752,8 @@ import LayoutComponent from "../../components/layouts/LayoutComponent";
 import Footer from "../../components/Footer";
 import CopyRights from "../../components/CopyRights";
 import ShowInterest from "./ShowInterest";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { getTheProfieMoreDetails, getUserProfile, getMyActivePlanData, sendChatMessage } from "../../api/axiosService/userAuthService";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { io } from "socket.io-client";
@@ -1906,10 +1908,19 @@ const MoreDetails = () => {
     const fetchProfile = async () => {
       if (!profileId) return;
       try {
-        const response = await getTheProfieMoreDetails(profileId);
-        if (response.status === 200) setUserInfo(response.data.data);
+        const response = await getTheProfieMoreDetails(profileId, currentUserId);
+        if (response.status === 200) {
+          setUserInfo(response.data.data);
+          window.dispatchEvent(new Event("planUpdated"));
+        }
       } catch (err) {
-        console.error("Error fetching profile details:", err);
+        if (err.response && err.response.status === 403) {
+          const errMsg = err.response.data?.message || "Limit Reached";
+          toast.error(errMsg, { position: "top-center" });
+          setTimeout(() => navigate(-1), 1500);
+        } else {
+          console.error("Error fetching profile details:", err);
+        }
       }
     };
     fetchProfile();
@@ -2258,6 +2269,7 @@ const MoreDetails = () => {
 
       <Footer />
       <CopyRights />
+      <ToastContainer />
 
       {/* Chat Ui */}
       {isChatOpen && userInfo && (

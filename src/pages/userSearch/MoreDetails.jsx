@@ -22,48 +22,51 @@ const MoreDetails = () => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  const userId = localStorage.getItem("userId");
+const [userId, setUserId] = useState(() => localStorage.getItem("userId"));
   const baseUrl = import.meta.env.VITE_BASE_ROUTE;
   const navigate = useNavigate();
+
+  
 
  useEffect(() => {
   const fetchData = async () => {
     try {
       setLoading(true);
 
+      console.log("👉 Sending viewerId:", userId); // DEBUG
+
       const response = await getTheProfieMoreDetails(profileId, userId);
 
       if (response.status === 200) {
         setProfileData(response.data.data);
-
-        // ✅ 🔥 IMPORTANT (PLAN UPDATE TRIGGER)
         window.dispatchEvent(new Event("planUpdated"));
       } else {
         setError("Failed to fetch profile data");
       }
-
     } catch (err) {
       const errorMsg = err.response?.data?.message;
       const statusCode = err.response?.status;
 
-      // ✅ LIMIT REACHED HANDLE
-      if (statusCode === 403 && errorMsg?.includes("limit")) {
-        toast.error(errorMsg, { position: "top-center", autoClose: 3000 });
-
-        setTimeout(() => navigate(-1), 1500);
+      if (statusCode === 403) {
+        toast.error(errorMsg || "Access restricted", { 
+          position: "top-center", 
+          autoClose: 30000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       } else {
         setError(errorMsg || "Error fetching profile data");
       }
-
-      console.error("Error:", err);
     } finally {
       setLoading(false);
     }
   };
 
+ if (!profileId || !userId || userId === "undefined") return;
   fetchData();
-}, [profileId, userId, navigate]);
-
+}, [profileId, userId]);
   useEffect(() => {
     if (!userId || !baseUrl) return;
     const newSocket = io(baseUrl, {

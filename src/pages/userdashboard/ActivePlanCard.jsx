@@ -32,6 +32,9 @@ const ActivePlanCard = () => {
     };
 
     if (userId) fetchData();
+
+    window.addEventListener("planUpdated", fetchData);
+    return () => window.removeEventListener("planUpdated", fetchData);
   }, [userId]);
 
   if (loading) {
@@ -79,8 +82,22 @@ const ActivePlanCard = () => {
   const startChat = planData.startChat || basePlan.startChat;
 
 
-  const isUnlimitedProfiles = rawMaxProfiles === "Unlimited" || rawMaxProfiles === "unlimited" || parseInt(rawMaxProfiles) >= 999999;
-  const isUnlimitedDaily = rawDailyLimit === "Unlimited" || rawDailyLimit === "unlimited" || parseInt(rawDailyLimit) >= 999999;
+  const planType = planData.subscriptionType?.toLowerCase() || "";
+  const isUnlimitedProfiles = 
+    rawMaxProfiles === "Unlimited" || 
+    rawMaxProfiles === "unlimited" || 
+    parseInt(rawMaxProfiles) >= 999999 ||
+    planType === "platinum" ||
+    planType === "gold" ||
+    planType === "golden";
+
+  const isUnlimitedDaily = 
+    rawDailyLimit === "Unlimited" || 
+    rawDailyLimit === "unlimited" || 
+    parseInt(rawDailyLimit) >= 999999 ||
+    planType === "platinum" ||
+    planType === "gold" ||
+    planType === "golden";
 
   const parsedMax = parseInt(rawMaxProfiles) || 0;
   const parsedDaily = parseInt(rawDailyLimit) || 0;

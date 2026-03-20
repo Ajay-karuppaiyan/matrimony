@@ -7,7 +7,10 @@ import LayoutComponent from "../components/layouts/LayoutComponent";
 import {
   newProfileMatch,
   getUserProfile,
+  getMyActivePlanData,
 } from "../api/axiosService/userAuthService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import PlanDetails from "./userdashboard/PlanDetails";
 import ProfileCompletion from "./userdashboard/ProfileCompletion";
 import RecentChats from "./userdashboard/RecentChats";
@@ -211,8 +214,56 @@ const UserDashboardPage = () => {
   };
 
   // Handle profile click navigation
-  const handleProfileClick = (profileId) => {
-    navigate(`/profile-more-details/${profileId}`);
+  const handleProfileClick = (targetUser) => {
+    if (!userId) {
+      navigate("/user/user-login");
+      return;
+    }
+
+    // ✅ CURRENT USER PLAN (from userInfo / paymentDetails)
+    const myActivePlan = userInfo?.paymentDetails?.find(
+      (p) =>
+        p.subscriptionStatus === "Active" &&
+        new Date(p.subscriptionValidTo) > new Date()
+    );
+
+    const myPlanName = myActivePlan?.subscriptionType?.toLowerCase() || "";
+
+    // ✅ TARGET USER PLAN
+    const targetActivePlan = targetUser?.paymentDetails?.find(
+      (p) =>
+        p.subscriptionStatus === "Active" &&
+        new Date(p.subscriptionValidTo) > new Date()
+    );
+
+    const targetPlanName = targetActivePlan?.subscriptionType?.toLowerCase() || "";
+
+    console.log("My Dashboard Plan:", myPlanName);
+    console.log("Target Dashboard Plan:", targetPlanName);
+
+    const isTargetRestricted = 
+      targetPlanName.includes("platinum") || 
+      targetPlanName.includes("gold") || 
+      targetPlanName.includes("golden");
+
+    if (myPlanName.includes("premium")) {
+      if (isTargetRestricted) {
+        console.log("🚫 Restricted: Premium user clicking Golden/Platinum profile");
+        toast.error("Upgrade your plan to view Platinum and Golden Membership profiles.", {
+          position: "top-center",
+          autoClose: 30000, // 30 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        });
+        return;
+      }
+    }
+
+    console.log("✅ Navigating to profile detail");
+    navigate(`/profile-more-details/${targetUser._id}`);
   };
 
   // Initialize components on first load
@@ -423,7 +474,7 @@ const UserDashboardPage = () => {
                               )}
                               <div
                                 className="fclick"
-                                onClick={() => handleProfileClick(profile._id)}
+                                onClick={() => handleProfileClick(profile)}
                                 style={{ cursor: "pointer" }}
                               >
                                 &nbsp;
@@ -456,6 +507,7 @@ const UserDashboardPage = () => {
       </div>
 
       {/* Footer */}
+      <ToastContainer />
       <Footer />
       <CopyRights />
     </div>

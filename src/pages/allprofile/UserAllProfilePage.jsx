@@ -5,7 +5,10 @@ import LayoutComponent from "../../components/layouts/LayoutComponent";
 import {
   fetchAllUserProfiles,
   fetchAllUserProfilesHome,
+  getMyActivePlanData,
 } from "../../api/axiosService/userAuthService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ShowInterest from "./ShowInterest";
 
 const UserAllProfilePage = () => {
@@ -24,6 +27,24 @@ const UserAllProfilePage = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeChats, setActiveChats] = useState([]);
+  const [currentUserPlan, setCurrentUserPlan] = useState(null);
+
+  // Fetch current user's active plan
+  useEffect(() => {
+    const fetchMyPlan = async () => {
+      if (userId) {
+        try {
+          const res = await getMyActivePlanData(userId);
+          if (res.status === 200) {
+            setCurrentUserPlan(res.data.activePlan);
+          }
+        } catch (error) {
+          console.error("Error fetching my active plan:", error);
+        }
+      }
+    };
+    fetchMyPlan();
+  }, [userId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -122,6 +143,49 @@ const UserAllProfilePage = () => {
 
   const closeChat = () => {
     setIsChatOpen(false);
+  };
+
+  const handleViewProfile = (e, targetUser) => {
+    e.preventDefault();
+    if (!userId) {
+      window.location.href = "/user/user-login"; // Simple redirect for now
+      return;
+    }
+
+    // ✅ CHECK PLAN RESTRICTION
+    const targetUserActivePlan = targetUser.paymentDetails?.find(
+      (p) =>
+        p.subscriptionStatus === "Active" &&
+        new Date(p.subscriptionValidTo) > new Date()
+    );
+
+    const myPlanName = currentUserPlan?.subscriptionType?.toLowerCase() || "";
+    const targetPlanName = targetUserActivePlan?.subscriptionType?.toLowerCase() || "";
+
+    console.log("My Plan (AllProfiles):", myPlanName);
+    console.log("Target Plan (AllProfiles):", targetPlanName);
+
+    const isTargetRestricted = 
+      targetPlanName.includes("platinum") || 
+      targetPlanName.includes("gold") || 
+      targetPlanName.includes("golden");
+
+    if (myPlanName.includes("premium")) {
+      if (isTargetRestricted) {
+        toast.error("Upgrade your plan to view Platinum and Golden Membership profiles.", {
+          position: "top-center",
+          autoClose: 30000, // 30 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        });
+        return;
+      }
+    }
+
+    window.location.href = `/profile-more-details/${targetUser._id}`;
   };
 
   return (
@@ -426,7 +490,7 @@ const UserAllProfilePage = () => {
 
                           <div className="pro-detail">
                             <h4>
-                              <a href="#">{user.userName}</a>
+                              <a href="#" onClick={(e) => handleViewProfile(e, user)}>{user.userName}</a>
                             </h4>
                             <div className="pro-bio">
                               <span>{user.degree || "Not specified"}</span>
@@ -457,7 +521,7 @@ const UserAllProfilePage = () => {
                               >
                                 Send interest
                               </a>
-                              <a href={`/profile-more-details/${user._id}`}>
+                              <a href="#" onClick={(e) => handleViewProfile(e, user)}>
                                 More details
                               </a>
                             </div>
@@ -695,6 +759,7 @@ const UserAllProfilePage = () => {
         </div>
       )}
 
+      <ToastContainer />
       <Footer />
       <CopyRights />
     </div>

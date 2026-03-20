@@ -7,7 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   fetchSearchedProfileData,
   saveTheProfileAsShortlisted,
+  getMyActivePlanData,
 } from "../../api/axiosService/userAuthService.js";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import defaultProfileImg from "../../assets/images/blue-circle-with-white-user_78370-4707.avif";
 import maleDefault from "../../assets/images/profiles/men1.jpg";
 import femaleDefault from "../../assets/images/profiles/12.jpg";
@@ -275,6 +278,7 @@ const UserSearchResult = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeChats, setActiveChats] = useState([]);
+  const [currentUserPlan, setCurrentUserPlan] = useState(null);
 
   /* Add viewType state */
   const [viewType, setViewType] = useState("list");
@@ -360,6 +364,23 @@ const UserSearchResult = () => {
   //     fetchData();
   //   }
   // }, [state]);
+
+  // Fetch current user's active plan
+  useEffect(() => {
+    const fetchMyPlan = async () => {
+      if (userId) {
+        try {
+          const res = await getMyActivePlanData(userId);
+          if (res.status === 200) {
+            setCurrentUserPlan(res.data.activePlan);
+          }
+        } catch (error) {
+          console.error("Error fetching my active plan:", error);
+        }
+      }
+    };
+    fetchMyPlan();
+  }, [userId]);
 
   // Initial data fetch
 useEffect(() => {
@@ -503,6 +524,49 @@ useEffect(() => {
 
   const closeChat = () => {
     setIsChatOpen(false);
+  };
+
+  const handleViewProfile = (targetUser) => {
+    if (!userId) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    // ✅ CHECK PLAN RESTRICTION
+    const targetUserActivePlan = targetUser.paymentDetails?.find(
+      (p) =>
+        p.subscriptionStatus === "Active" &&
+        new Date(p.subscriptionValidTo) > new Date()
+    );
+
+    const targetPlanName =
+      targetUserActivePlan?.subscriptionType?.toLowerCase() || "";
+    const myPlanName = currentUserPlan?.subscriptionType?.toLowerCase() || "";
+
+    console.log("My Plan (Search):", myPlanName);
+    console.log("Target Plan (Search):", targetPlanName);
+
+    const isTargetRestricted = 
+      targetPlanName.includes("platinum") || 
+      targetPlanName.includes("gold") || 
+      targetPlanName.includes("golden");
+
+    if (myPlanName.includes("premium")) {
+      if (isTargetRestricted) {
+        toast.error("Upgrade your plan to view Platinum and Golden Membership profiles.", {
+          position: "top-center",
+          autoClose: 30000, // 30 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        });
+        return;
+      }
+    }
+
+    navigate(`/profile-more-details/${targetUser._id}`, { state: targetUser });
   };
 
   const shortListProfile = async (user) => {
@@ -687,7 +751,9 @@ useEffect(() => {
                                   overflow: "hidden",
                                   borderRadius: "4px",
                                   border: "1px solid #eee",
+                                  cursor: "pointer",
                                 }}
+                                onClick={() => handleViewProfile(user)}
                               >
                                 <UserCardImageSlider
                                   user={user}
@@ -700,7 +766,7 @@ useEffect(() => {
                             </div>
 
                             {/* Center: Details */}
-                            <div className="col-md-9 col-sm-8 d-flex flex-column">
+                            <div className="col-md-9 col-sm-8 d-flex flex-column" style={{cursor: 'pointer'}} onClick={() => handleViewProfile(user)}>
                               <div>
                                 <h4
                                   style={{
@@ -776,12 +842,10 @@ useEffect(() => {
                                     padding: "6px 15px",
                                     fontWeight: "500",
                                   }}
-                                  onClick={() =>
-                                    navigate(
-                                      `/profile-more-details/${user._id}`,
-                                      { state: user },
-                                    )
-                                  }
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleViewProfile(user);
+                                  }}
                                 >
                                   View Profile
                                 </button>
@@ -1122,6 +1186,7 @@ useEffect(() => {
         </div>
       )}
 
+      <ToastContainer />
       <Footer />
       <CopyRights />
     </div>
