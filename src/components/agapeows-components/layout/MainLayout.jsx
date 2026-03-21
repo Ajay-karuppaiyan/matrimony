@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-/* import { useLocation } from "react-router-dom"; */
+import { useLocation } from "react-router-dom";
 import {
   Search,
   Phone,
@@ -21,26 +21,26 @@ import GlobalSearchModal from "../../GlobalSearchModal";
 // ExploreDropdown Component - Redesigned as List
 const ExploreDropdown = ({ isVisible }) => {
   const categories = [
-   {
-  title: "Personalized Matrimony",
-  path: "/personalized-matrimony",
-},
-{
-  title: "NRI Matrimony",
-  path: "/nri-matrimony",
-},
-{
-  title: "Churches - Partner with Us",
-  path: "/church-partner",
-},
-{
-  title: "Become a Matrimonial Advisor",
-  path: "/matrimonial-advisor",
-},
-{
-  title: "Pre-Marital and Marital Counseling",
-  path: "/marital-counseling",
-},
+    {
+      title: "Personalized Matrimony",
+      path: "/personalized-matrimony",
+    },
+    {
+      title: "NRI Matrimony",
+      path: "/nri-matrimony",
+    },
+    {
+      title: "Churches - Partner with Us",
+      path: "/church-partner",
+    },
+    {
+      title: "Become a Matrimonial Advisor",
+      path: "/matrimonial-advisor",
+    },
+    {
+      title: "Pre-Marital and Marital Counseling",
+      path: "/marital-counseling",
+    },
     {
       title: "Bridal Make-up",
       path: "/bridal-makeup",
@@ -79,9 +79,9 @@ const ExploreDropdown = ({ isVisible }) => {
 const ProfileDropdown = ({ isVisible, onLogout }) => {
   const userId = localStorage.getItem("userId");
   const profileLinks = [
-     { label: "My Dashboard", path: "/user/user-dashboard-page" },
+    { label: "My Dashboard", path: "/user/user-dashboard-page" },
     { label: "My Profile", path: "/user/user-profile-page" },
-    
+
     // { label: "My Chatss", path: "/user/show-all-profiles/all-profile" },
     { label: "Change Password", path: `/reset-password/${userId}` },
     { label: "User Settings", path: "/user/user-settings-page" },
@@ -136,11 +136,10 @@ const HelpDropdown = ({ isVisible }) => {
 
   return (
     <div
-      className={`absolute top-full left-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2 z-50 border border-gray-100 transition-all duration-300 ${
-        isVisible
-          ? "opacity-100 visible translate-y-0"
-          : "opacity-0 invisible translate-y-2"
-      }`}
+      className={`absolute top-full left-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2 z-50 border border-gray-100 transition-all duration-300 ${isVisible
+        ? "opacity-100 visible translate-y-0"
+        : "opacity-0 invisible translate-y-2"
+        }`}
     >
       {options.map((item, index) => (
         <button
@@ -157,7 +156,7 @@ const HelpDropdown = ({ isVisible }) => {
 
 const MainLayout = () => {
   const userId = localStorage.getItem("userId");
-  /* const location = useLocation(); */ // Removed unused var
+  const location = useLocation();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isExploreDropdownVisible, setIsExploreDropdownVisible] =
@@ -323,82 +322,102 @@ const MainLayout = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-              {/* <button
-                onClick={() => handleNavigate("/")}
-                className="text-gray-800 hover:text-purple-600 font-medium"
-              >
-                HOME
-              </button> */}
               <button
                 onClick={() => handleNavigate("/about-us")}
-                className="text-gray-800 hover:text-purple-600 font-medium"
+                className={`transition-all duration-200 font-medium py-2 ${
+                  location.pathname === "/about-us"
+                    ? "text-purple-600 font-bold border-b-2 border-purple-600"
+                    : "text-gray-800 hover:text-purple-600"
+                }`}
               >
                 ABOUT US
               </button>
-              {isUserActive && (
-  <button
-    onClick={() => handleNavigate("/user/find-matches")}
-    className="group flex items-center space-x-2 text-gray-800 font-medium transition-colors duration-200"
-  >
-    <Search className="w-4 h-4 text-gray-800 group-hover:text-purple-600" />
-    <span className="group-hover:text-purple-600">SEARCH</span>
-  </button>
-)}
+
+              <button
+                onClick={() => handleNavigate("/user/find-matches")}
+                className={`group flex items-center space-x-2 font-medium transition-all duration-200 py-2 ${
+                  location.pathname === "/user/find-matches"
+                    ? "text-purple-600 font-bold border-b-2 border-purple-600"
+                    : "text-gray-800 hover:text-purple-600"
+                }`}
+              >
+                <Search
+                  className={`w-4 h-4 transition-colors duration-200 ${
+                    location.pathname === "/user/find-matches"
+                      ? "text-purple-600"
+                      : "text-gray-800 group-hover:text-purple-600"
+                  }`}
+                />
+                <span className={location.pathname === "/user/find-matches" ? "text-purple-600" : ""}>SEARCH</span>
+              </button>
+
               <div
                 className="relative"
                 onMouseEnter={() => setIsExploreDropdownVisible(true)}
                 onMouseLeave={() => setIsExploreDropdownVisible(false)}
               >
-                <button className="text-gray-800 hover:text-purple-600 font-medium flex items-center py-2">
+                <button
+                  className={`transition-all duration-200 font-medium flex items-center py-2 ${
+                    location.pathname.includes("/personalized-matrimony") ||
+                    location.pathname.includes("/nri-matrimony") ||
+                    location.pathname.includes("/church-partner") ||
+                    location.pathname.includes("/matrimonial-advisor") ||
+                    location.pathname.includes("/marital-counseling") ||
+                    location.pathname.includes("/bridal-makeup") ||
+                    location.pathname.includes("/insurance-services") ||
+                    location.pathname === "/user/user-service-page"
+                      ? "text-purple-600 font-bold border-b-2 border-purple-600"
+                      : "text-gray-800 hover:text-purple-600"
+                  }`}
+                >
                   SERVICES <ChevronDown className="w-4 h-4 ml-1" />
                 </button>
                 <ExploreDropdown
                   isVisible={isExploreDropdownVisible}
-                  isUserActive={isUserActive}
+                  isUserActive={true}
                 />
               </div>
+
               <button
                 onClick={() => handleNavigate("/user/events-page")}
-                className="text-gray-800 hover:text-purple-600 font-medium"
+                className={`transition-all duration-200 font-medium py-2 ${
+                  location.pathname === "/user/events-page"
+                    ? "text-purple-600 font-bold border-b-2 border-purple-600"
+                    : "text-gray-800 hover:text-purple-600"
+                }`}
               >
                 EVENTS
               </button>
+
               <button
                 onClick={() => handleNavigate("/user/user-plan-selection")}
-                className="text-gray-800 hover:text-purple-600 font-medium"
+                className={`transition-all duration-200 font-medium py-2 ${
+                  location.pathname === "/user/user-plan-selection"
+                    ? "text-purple-600 font-bold border-b-2 border-purple-600"
+                    : "text-gray-800 hover:text-purple-600"
+                }`}
               >
                 PLANS
               </button>
-              {/* <button
-                onClick={() => handleNavigate("/success-stories")}
-                className="text-gray-800 hover:text-purple-600 font-medium"
-              >
-                SUCCESS STORIES
-              </button> */}
-              {/* <button
-                onClick={() => handleNavigate("/help-support")}
-                className="text-gray-800 hover:text-purple-600 font-medium"
-              >
-                HELP & SUPPORT
-              </button> */}
 
               <div
-  className="relative"
-  onMouseEnter={() => setIsHelpDropdownVisible(true)}
-  onMouseLeave={() => setIsHelpDropdownVisible(false)}
->
-  <button className="text-gray-800 hover:text-purple-600 font-medium flex items-center py-2">
-    HELP & SUPPORT <ChevronDown className="w-4 h-4 ml-1" />
-  </button>
-
-  <HelpDropdown isVisible={isHelpDropdownVisible} />
-</div>
-              {/* <button
-                onClick={() => handleNavigate("/about-us")}
-                className="text-gray-800 hover:text-purple-600 font-medium"
+                className="relative"
+                onMouseEnter={() => setIsHelpDropdownVisible(true)}
+                onMouseLeave={() => setIsHelpDropdownVisible(false)}
               >
-                ABOUT US
-              </button> */}
+                <button
+                  className={`transition-all duration-200 font-medium flex items-center py-2 ${
+                    location.pathname === "/help-support" ||
+                    location.pathname === "/report-issue"
+                      ? "text-purple-600 font-bold border-b-2 border-purple-600"
+                      : "text-gray-800 hover:text-purple-600"
+                  }`}
+                >
+                  HELP & SUPPORT <ChevronDown className="w-4 h-4 ml-1" />
+                </button>
+
+                <HelpDropdown isVisible={isHelpDropdownVisible} />
+              </div>
             </nav>
 
             {/* User Profile or Auth Buttons */}
@@ -470,75 +489,28 @@ const MainLayout = () => {
           {isMobileMenuOpen && (
             <div className="md:hidden mt-4 pb-4 border-t">
               <nav className="flex flex-col space-y-3 mt-4">
-                <button
-                  onClick={() => {
-                    handleNavigate("/");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-gray-800 hover:text-purple-600 font-medium text-left"
-                >
-                  HOME
-                </button>
-                {/* <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-gray-800 hover:text-purple-600 font-medium text-left"
-                >
-                  SERVICES
-                </button> */}
-
-                <button className="text-gray-800 hover:text-purple-600 font-medium flex items-center py-2">
-                  SERVICES <ChevronDown className="w-4 h-4 ml-1" />
-                </button>
-                <ExploreDropdown
-                  isVisible={isExploreDropdownVisible}
-                  isUserActive={isUserActive}
-                />
-
-                <button
-                  onClick={() => {
-                    handleNavigate("/user/events-page");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-gray-800 hover:text-purple-600 font-medium text-left"
-                >
-                  EVENTS
-                </button>
-                <button
-                  onClick={() => {
-                    handleNavigate("/user/user-plan-selection");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-gray-800 hover:text-purple-600 font-medium text-left"
-                >
-                  PLANS
-                </button>
-                <button
-                  onClick={() => {
-                    handleNavigate("/success-stories");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-gray-800 hover:text-purple-600 font-medium text-left"
-                >
-                  SUCCESS STORIES
-                </button>
-                <button
-                  onClick={() => {
-                    handleNavigate("/help-support");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-gray-800 hover:text-purple-600 font-medium text-left"
-                >
-                  HELP & SUPPORT
-                </button>
-                <button
-                  onClick={() => {
-                    handleNavigate("/about-us");
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-gray-800 hover:text-purple-600 font-medium text-left"
-                >
-                  ABOUT US
-                </button>
+                {[
+                  { path: "/about-us", label: "ABOUT US" },
+                  { path: "/user/find-matches", label: "SEARCH" },
+                  { path: "/user/events-page", label: "EVENTS" },
+                  { path: "/user/user-plan-selection", label: "PLANS" },
+                  { path: "/help-support", label: "HELP & SUPPORT" },
+                ].map((item) => (
+                  <button
+                    key={item.path}
+                    onClick={() => {
+                      handleNavigate(item.path);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`text-left font-medium p-2 rounded-md ${
+                      location.pathname === item.path
+                        ? "text-purple-600 bg-purple-50"
+                        : "text-gray-800 hover:text-purple-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </nav>
 
               {/* Mobile Profile or Auth */}

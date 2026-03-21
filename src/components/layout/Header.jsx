@@ -2,24 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaHome,
-  FaBriefcase,
-  FaUsers,
-  FaGraduationCap,
-  FaUniversity,
+  FaInfoCircle,
+  FaSearch,
+  FaHandshake,
+  FaCalendarAlt,
+  FaStar,
+  FaQuestionCircle,
   FaUserCircle,
   FaSignOutAlt,
   FaTimes,
   FaChevronDown,
   FaChevronUp,
-  FaChalkboardTeacher,
-  FaSchool,
-  FaBook,
-  FaLaptop,
-  FaChild,
-  FaMapMarkerAlt,
-  FaUserTie,
-  FaSuitcase,
 } from "react-icons/fa";
+import logo from "../../assets/images/agapevows - logo.webp";
 import { useLoginCleanup } from "../../hooks/useLoginCleanup";
 import { FaSquarePen } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
@@ -178,7 +173,7 @@ const Header = () => {
     const fetchData = async () => {
       try {
         const response = await getHeaderStaticsData();
-        if (response.status===200) {
+        if (response.status === 200) {
           // Convert array to object for easy lookup
           const countsMap = {};
           response.data.data.forEach((item) => {
@@ -201,41 +196,28 @@ const Header = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    setOpenDropdown(null);
-  };
-
-  const toggleDropdown = (dropdown) => {
-    setOpenDropdown(openDropdown === dropdown ? null : dropdown);
   };
 
   const handleProfileClick = () => {
-    const userType = localStorage.getItem("userType");
-    if (userType === "employee") {
-      navigate("/dashboard");
-    } else {
-      navigate("/employer/dashboard");
-    }
+    navigate("/user/user-dashboard-page");
     setIsMenuOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    localStorage.removeItem("employerToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("userType");
     setIsLoggedIn(false);
-    navigate("/login");
+    navigate("/user/user-login");
   };
 
   const handleLogin = () => {
-    navigate("/login");
+    navigate("/user/user-login");
     setIsMenuOpen(false);
   };
 
   const handleLinkClick = () => {
     setIsMenuOpen(false);
-    setOpenDropdown(null);
-    setShowJobsMenu(false);
   };
 
   const handleAccountClick = () => {
@@ -245,6 +227,29 @@ const Header = () => {
       handleLogin();
     }
   };
+
+  const isServicesActive = () => {
+    const servicePaths = [
+      "/personalized-matrimony",
+      "/nri-matrimony",
+      "/church-partner",
+      "/matrimonial-advisor",
+      "/marital-counseling",
+      "/bridal-makeup",
+      "/insurance-services",
+      "/user/user-service-page"
+    ];
+    return servicePaths.some(path => location.pathname === path || location.pathname.includes(path));
+  };
+
+  const isHelpActive = () => {
+    const helpPaths = ["/help-support", "/report-issue"];
+    return helpPaths.some(path => location.pathname === path || location.pathname.includes(path));
+  };
+
+  const isActive = (path) => location.pathname === path;
+  const activeStyle = { color: "#ffa500", fontWeight: "bold" };
+  const normalStyle = {};
 
   const ProfilePicture = ({ size = "24px", className = "" }) => {
     if (userProfilePic) {
@@ -304,17 +309,17 @@ const Header = () => {
             <Link to="/">
               <img
                 className="normal-logo"
-                src="/images/logo.png"
+                src={logo}
                 width="175"
                 height="43"
-                alt="Job Circle"
+                alt="Agape Vows"
               />
               <img
                 className="sticky-logo"
-                src="/images/logo.png"
+                src={logo}
                 width="175"
                 height="43"
-                alt="Job Circle"
+                alt="Agape Vows"
               />
             </Link>
           </strong>
@@ -373,638 +378,84 @@ const Header = () => {
             <div className="nav-drop d-none d-lg-block">
               <ul className="navigation">
                 <li style={{ padding: "0px 15px" }}>
-                  <Link to="/" onClick={handleLinkClick}>
-                    <FaHome /> &nbsp; Home
-                  </Link>
-                </li>
-
-                <li
-                  style={{ padding: "0px 15px", position: "relative" }}
-                  ref={jobsMenuRef}
-                >
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowJobsMenu(!showJobsMenu);
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <FaBriefcase /> &nbsp; Jobs &nbsp;
-                    <FaChevronDown style={{ fontSize: "10px" }} />
-                  </a>
-
-                  {/* Jobs Mega Menu with 4 Tabs */}
-                  {showJobsMenu && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "100%",
-                        left: "-100px",
-                        width: "550px",
-                        backgroundColor: "#fff",
-                        boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
-                        borderRadius: "8px",
-                        zIndex: 1000,
-                        marginTop: "10px",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {/* Tab Headers */}
-                      <div
-                        style={{
-                          display: "flex",
-                          borderBottom: "2px solid #f0f0f0",
-                          backgroundColor: "#f8f9fa",
-                        }}
-                      >
-                        <button
-                          onClick={() => setActiveTab("employerTypes")}
-                          style={{
-                            flex: 1,
-                            padding: "15px 10px",
-                            border: "none",
-                            background:
-                              activeTab === "employerTypes"
-                                ? "#fff"
-                                : "transparent",
-                            color:
-                              activeTab === "employerTypes"
-                                ? "#063970"
-                                : "#666",
-                            fontSize: "11px",
-                            fontWeight:
-                              activeTab === "employerTypes" ? "600" : "400",
-                            cursor: "pointer",
-                            borderBottom:
-                              activeTab === "employerTypes"
-                                ? "3px solid #ffa500"
-                                : "none",
-                            transition: "all 0.3s",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          Employer Type
-                        </button>
-                        <button
-                          onClick={() => setActiveTab("categories")}
-                          style={{
-                            flex: 1,
-                            padding: "15px 10px",
-                            border: "none",
-                            background:
-                              activeTab === "categories"
-                                ? "#fff"
-                                : "transparent",
-                            color:
-                              activeTab === "categories" ? "#063970" : "#666",
-                            fontSize: "11px",
-                            fontWeight:
-                              activeTab === "categories" ? "600" : "400",
-                            cursor: "pointer",
-                            borderBottom:
-                              activeTab === "categories"
-                                ? "3px solid #ffa500"
-                                : "none",
-                            transition: "all 0.3s",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          Categories
-                        </button>
-                        <button
-                          onClick={() => setActiveTab("locations")}
-                          style={{
-                            flex: 1,
-                            padding: "15px 10px",
-                            border: "none",
-                            background:
-                              activeTab === "locations"
-                                ? "#fff"
-                                : "transparent",
-                            color:
-                              activeTab === "locations" ? "#063970" : "#666",
-                            fontSize: "11px",
-                            fontWeight:
-                              activeTab === "locations" ? "600" : "400",
-                            cursor: "pointer",
-                            borderBottom:
-                              activeTab === "locations"
-                                ? "3px solid #ffa500"
-                                : "none",
-                            transition: "all 0.3s",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          Locations
-                        </button>
-                        <button
-                          onClick={() => setActiveTab("designations")}
-                          style={{
-                            flex: 1,
-                            padding: "15px 10px",
-                            border: "none",
-                            background:
-                              activeTab === "designations"
-                                ? "#fff"
-                                : "transparent",
-                            color:
-                              activeTab === "designations" ? "#063970" : "#666",
-                            fontSize: "11px",
-                            fontWeight:
-                              activeTab === "designations" ? "600" : "400",
-                            cursor: "pointer",
-                            borderBottom:
-                              activeTab === "designations"
-                                ? "3px solid #ffa500"
-                                : "none",
-                            transition: "all 0.3s",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          Designations
-                        </button>
-                      </div>
-
-                      {/* Tab Content */}
-                      <div
-                        style={{
-                          padding: "20px",
-                          maxHeight: "350px",
-                          overflowY: "auto",
-                        }}
-                      >
-                        {activeTab === "employerTypes" && (
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: "6px",
-                            }}
-                          >
-                            {employerTypes.map((employer, index) => (
-                              <Link
-                                key={index}
-                                to={`/job-vacancies?employerType=${employer.name}`}
-                                onClick={handleLinkClick}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  padding: "10px 12px",
-                                  textDecoration: "none",
-                                  color: "#333",
-                                  fontSize: "13px",
-                                  borderRadius: "4px",
-                                  transition: "all 0.2s",
-                                  border: "1px solid transparent",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#f8f9fa";
-                                  e.currentTarget.style.borderColor = "#063970";
-                                  e.currentTarget.style.transform =
-                                    "translateX(5px)";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                  e.currentTarget.style.borderColor =
-                                    "transparent";
-                                  e.currentTarget.style.transform =
-                                    "translateX(0)";
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: "#063970",
-                                    marginRight: "10px",
-                                    fontSize: "16px",
-                                  }}
-                                >
-                                  {employer.icon}
-                                </span>
-                                <div style={{ flex: 1 }}>
-                                  <div
-                                    style={{
-                                      fontWeight: "500",
-                                      marginBottom: "1px",
-                                    }}
-                                  >
-                                    {employer.name}
-                                  </div>
-                                  <div
-                                    style={{ fontSize: "11px", color: "#999" }}
-                                  >
-                                    {employer.count}
-                                  </div>
-                                </div>
-                                <FaChevronDown
-                                  style={{
-                                    fontSize: "10px",
-                                    color: "#999",
-                                    transform: "rotate(-90deg)",
-                                  }}
-                                />
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                        {/* Categories Tab */}
-                        {activeTab === "categories" && (
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: "6px",
-                            }}
-                          >
-                            {jobCategories.map((category, index) => (
-                              <Link
-                                key={index}
-                                to={`/job-vacancies?category=${category.name}`}
-                                onClick={handleLinkClick}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  padding: "8px 12px",
-                                  textDecoration: "none",
-                                  color: "#333",
-                                  fontSize: "13px",
-                                  borderRadius: "4px",
-                                  transition: "all 0.2s",
-                                  border: "1px solid transparent",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#f8f9fa";
-                                  e.currentTarget.style.borderColor = "#ffa500";
-                                  e.currentTarget.style.transform =
-                                    "translateX(5px)";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                  e.currentTarget.style.borderColor =
-                                    "transparent";
-                                  e.currentTarget.style.transform =
-                                    "translateX(0)";
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: "#ffa500",
-                                    marginRight: "10px",
-                                    fontSize: "16px",
-                                  }}
-                                >
-                                  {category.icon}
-                                </span>
-                                <div style={{ flex: 1 }}>
-                                  <div
-                                    style={{
-                                      fontWeight: "500",
-                                      marginBottom: "1px",
-                                    }}
-                                  >
-                                    {category.name}
-                                  </div>
-                                  <div
-                                    style={{ fontSize: "11px", color: "#999" }}
-                                  >
-                                    {getCategoryCount(category.name)}
-                                  </div>
-                                </div>
-                                <FaChevronDown
-                                  style={{
-                                    fontSize: "10px",
-                                    color: "#999",
-                                    transform: "rotate(-90deg)",
-                                  }}
-                                />
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Locations Tab */}
-                        {activeTab === "locations" && (
-                          <div
-                            style={{
-                              display: "grid",
-                              gridTemplateColumns: "1fr 1fr",
-                              gap: "8px",
-                            }}
-                          >
-                            {locations.map((location, index) => (
-                              <Link
-                                key={index}
-                                to={`/job-vacancies?location=${location}`}
-                                onClick={handleLinkClick}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  padding: "8px 12px",
-                                  textDecoration: "none",
-                                  color: "#333",
-                                  fontSize: "13px",
-                                  borderRadius: "4px",
-                                  transition: "all 0.2s",
-                                  border: "1px solid #e0e0e0",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#ffa500";
-                                  e.currentTarget.style.borderColor = "#ffa500";
-                                  e.currentTarget.style.color = "#fff";
-                                  e.currentTarget.querySelector(
-                                    "svg"
-                                  ).style.color = "#fff";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                  e.currentTarget.style.borderColor = "#e0e0e0";
-                                  e.currentTarget.style.color = "#333";
-                                  e.currentTarget.querySelector(
-                                    "svg"
-                                  ).style.color = "#ffa500";
-                                }}
-                              >
-                                <FaMapMarkerAlt
-                                  style={{
-                                    color: "#ffa500",
-                                    marginRight: "8px",
-                                    fontSize: "12px",
-                                    transition: "color 0.2s",
-                                  }}
-                                />
-                                <span style={{ fontWeight: "500" }}>
-                                  {location}
-                                </span>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Designations Tab */}
-                        {activeTab === "designations" && (
-                          <div
-                            style={{
-                              display: "grid",
-                              gridTemplateColumns: "1fr 1fr",
-                              gap: "8px",
-                            }}
-                          >
-                            {designations.map((designation, index) => (
-                              <Link
-                                key={index}
-                                to={`/job-vacancies?designation=${designation}`}
-                                onClick={handleLinkClick}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  padding: "8px 12px",
-                                  textDecoration: "none",
-                                  color: "#333",
-                                  fontSize: "13px",
-                                  borderRadius: "4px",
-                                  transition: "all 0.2s",
-                                  border: "1px solid #e0e0e0",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "#063970";
-                                  e.currentTarget.style.borderColor = "#063970";
-                                  e.currentTarget.style.color = "#fff";
-                                  e.currentTarget.querySelector(
-                                    "svg"
-                                  ).style.color = "#ffa500";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                  e.currentTarget.style.borderColor = "#e0e0e0";
-                                  e.currentTarget.style.color = "#333";
-                                  e.currentTarget.querySelector(
-                                    "svg"
-                                  ).style.color = "#ffa500";
-                                }}
-                              >
-                                <FaUserTie
-                                  style={{
-                                    color: "#ffa500",
-                                    marginRight: "8px",
-                                    fontSize: "12px",
-                                    transition: "color 0.2s",
-                                  }}
-                                />
-                                <span style={{ fontWeight: "500" }}>
-                                  {designation}
-                                </span>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* View All Jobs Button */}
-                      <div
-                        style={{
-                          padding: "15px 20px",
-                          textAlign: "center",
-                          borderTop: "1px solid #f0f0f0",
-                          backgroundColor: "#f8f9fa",
-                        }}
-                      >
-                        <Link
-                          to="/job-vacancies"
-                          onClick={handleLinkClick}
-                          style={{
-                            display: "inline-block",
-                            padding: "8px 25px",
-                            backgroundColor: "#063970",
-                            color: "#fff",
-                            textDecoration: "none",
-                            borderRadius: "20px",
-                            fontSize: "13px",
-                            fontWeight: "500",
-                            transition: "all 0.3s",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = "#ffa500";
-                            e.currentTarget.style.transform = "scale(1.05)";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = "#063970";
-                            e.currentTarget.style.transform = "scale(1)";
-                          }}
-                        >
-                          View All Jobs
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </li>
-
-                <li style={{ padding: "0px 15px" }} className="dropdown">
-                  <a
-                    className="dropdown-toggle"
-                    href="#"
-                    role="button"
-                    id="employerDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <FaUniversity /> &nbsp; Enterprises
-                  </a>
-
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="employerDropdown"
-                  >
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/employer-admin/login"
-                        onClick={handleLinkClick}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Login / Signup
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/subscription-plan"
-                        onClick={handleLinkClick}
-                      >
-                        Plan & Subscription
-                      </Link>
-                    </li>
-                  </ul>
-                </li>
-                <li style={{ padding: "0px 15px" }} className="dropdown">
-                  <a
-                    className="dropdown-toggle"
-                    href="#"
-                    role="button"
-                    id="employerDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <FaUniversity /> &nbsp; Employer
-                  </a>
-
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="employerDropdown"
-                  >
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/employer/login"
-                        onClick={handleLinkClick}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Login / Signup
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/employer"
-                        onClick={handleLinkClick}
-                      >
-                        Employer
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/subscription-plan"
-                        onClick={handleLinkClick}
-                      >
-                        Plan & Subscription
-                      </Link>
-                    </li>
-                  </ul>
-                </li>
-
-                <li style={{ padding: "0px 15px" }} className="dropdown">
-                  <a
-                    className="dropdown-toggle"
-                    href="#"
-                    role="button"
-                    id="aboutDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <FaGraduationCap /> &nbsp; About Us
-                  </a>
-                  <ul className="dropdown-menu" aria-labelledby="aboutDropdown">
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/about-us"
-                        onClick={handleLinkClick}
-                      >
-                        About EdProfio
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/careers"
-                        onClick={handleLinkClick}
-                      >
-                        Careers
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to="/blogs"
-                        onClick={handleLinkClick}
-                      >
-                        Blogs / Press Release
-                      </Link>
-                    </li>
-                  </ul>
-                </li>
-
-                <li style={{ padding: "0px 10px" }}>
                   <Link
-                    className="btn btn-white btn-sm"
-                    to="/post-job"
+                    to="/about-us"
                     onClick={handleLinkClick}
+                    style={isActive("/about-us") ? activeStyle : normalStyle}
                   >
-                    <span className="btn-text text-secondary">
-                      <i
-                        className="icon icon-briefcase3"
-                        style={{ fontSize: "14px" }}
-                      ></i>{" "}
-                      &nbsp; Post Jobs FREE
-                    </span>
+                    <FaInfoCircle /> &nbsp; ABOUT US
                   </Link>
+                </li>
+
+                <li style={{ padding: "0px 15px" }}>
+                  <Link
+                    to="/user/find-matches"
+                    onClick={handleLinkClick}
+                    style={isActive("/user/find-matches") ? activeStyle : normalStyle}
+                  >
+                    <FaSearch style={isActive("/user/find-matches") ? { color: "#ffa500" } : {}} /> &nbsp; 
+                    <span style={isActive("/user/find-matches") ? { color: "#ffa500", fontWeight: "bold" } : {}}>SEARCH</span>
+                  </Link>
+                </li>
+
+                <li style={{ padding: "0px 15px" }} className="dropdown">
+                  <Link
+                    to="/user/user-service-page"
+                    className="dropdown-toggle"
+                    style={isServicesActive() ? activeStyle : normalStyle}
+                  >
+                    <FaHandshake /> &nbsp; SERVICES
+                  </Link>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/personalized-matrimony" onClick={handleLinkClick}>Personalized Matrimony</Link></li>
+                    <li><Link className="dropdown-item" to="/nri-matrimony" onClick={handleLinkClick}>NRI Matrimony</Link></li>
+                    <li><Link className="dropdown-item" to="/church-partner" onClick={handleLinkClick}>Churches - Partner with Us</Link></li>
+                    <li><Link className="dropdown-item" to="/matrimonial-advisor" onClick={handleLinkClick}>Become a Matrimonial Advisor</Link></li>
+                    <li><Link className="dropdown-item" to="/marital-counseling" onClick={handleLinkClick}>Counseling</Link></li>
+                    <li><Link className="dropdown-item" to="/bridal-makeup" onClick={handleLinkClick}>Bridal Make-up</Link></li>
+                    <li><Link className="dropdown-item" to="/insurance-services" onClick={handleLinkClick}>Insurance Services</Link></li>
+                  </ul>
+                </li>
+
+                <li style={{ padding: "0px 15px" }}>
+                  <Link
+                    to="/user/events-page"
+                    onClick={handleLinkClick}
+                    style={isActive("/user/events-page") ? activeStyle : normalStyle}
+                  >
+                    <FaCalendarAlt /> &nbsp; EVENTS
+                  </Link>
+                </li>
+
+                <li style={{ padding: "0px 15px" }}>
+                  <Link
+                    to="/user/user-plan-selection"
+                    onClick={handleLinkClick}
+                    style={isActive("/user/user-plan-selection") ? activeStyle : normalStyle}
+                  >
+                    <FaStar /> &nbsp; PLANS
+                  </Link>
+                </li>
+
+                <li style={{ padding: "0px 15px" }} className="dropdown">
+                  <Link
+                    to="/help-support"
+                    className="dropdown-toggle"
+                    style={isHelpActive() ? activeStyle : normalStyle}
+                  >
+                    <FaQuestionCircle /> &nbsp; HELP & SUPPORT
+                  </Link>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/help-support" onClick={handleLinkClick}>Help & Support</Link></li>
+                    <li><Link className="dropdown-item" to="/report-issue" onClick={handleLinkClick}>Report & Issue</Link></li>
+                  </ul>
                 </li>
 
                 <li style={{ padding: "0px 5px" }} className="text-login">
                   <button
                     onClick={handleAccountClick}
                     style={{
-                      backgroundColor: "#063970",
+                      backgroundColor: "#6b21a8",
                       color: "#fff",
                       border: "none",
                       display: "flex",
@@ -1015,6 +466,7 @@ const Header = () => {
                       fontFamily: "poppins, sans-serif",
                       fontWeight: "400",
                       cursor: "pointer",
+                      borderRadius: "8px"
                     }}
                   >
                     {isLoggedIn ? (
@@ -1028,7 +480,7 @@ const Header = () => {
                           className="icon icon-users"
                           style={{ fontSize: "14px", color: "#fff" }}
                         ></i>
-                        Candidate Login
+                        Account Login
                       </>
                     )}
                   </button>
@@ -1093,367 +545,134 @@ const Header = () => {
 
         {/* Mobile Navigation Items */}
         <div style={{ padding: "50px 0 20px 0" }}>
-          {/* Home */}
-          <div style={{ marginBottom: "8px" }}>
-            <Link
-              to="/"
-              onClick={handleLinkClick}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "12px 20px",
-                color: "#fff",
-                textDecoration: "none",
-                fontSize: "16px",
-                fontWeight: "400",
-                borderBottom: "1px solid rgba(255,255,255,0.1)",
-              }}
-            >
-              <FaHome style={{ marginRight: "12px", fontSize: "16px" }} />
-              Home
-            </Link>
-          </div>
+          {[
+            { path: "/about-us", label: "ABOUT US", icon: <FaInfoCircle /> },
+            { path: "/user/find-matches", label: "SEARCH", icon: <FaSearch /> },
+            { path: "/user/events-page", label: "EVENTS", icon: <FaCalendarAlt /> },
+            { path: "/user/user-plan-selection", label: "PLANS", icon: <FaStar /> },
+          ].map((item) => (
+            <div key={item.path} style={{ marginBottom: "8px" }}>
+              <Link
+                to={item.path}
+                onClick={handleLinkClick}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "12px 20px",
+                  color: isActive(item.path) ? "#ffa500" : "#fff",
+                  backgroundColor: isActive(item.path) ? "rgba(255,255,255,0.1)" : "transparent",
+                  textDecoration: "none",
+                  fontSize: "16px",
+                  fontWeight: isActive(item.path) ? "600" : "400",
+                  borderBottom: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                {React.cloneElement(item.icon, { style: { marginRight: "12px", fontSize: "16px" } })}
+                {item.label}
+              </Link>
+            </div>
+          ))}
 
-          {/* Jobs */}
-          <div style={{ marginBottom: "8px" }}>
-            <Link
-              to="/job-vacancies"
-              onClick={handleLinkClick}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "12px 20px",
-                color: "#fff",
-                textDecoration: "none",
-                fontSize: "16px",
-                fontWeight: "400",
-                borderBottom: "1px solid rgba(255,255,255,0.1)",
-              }}
-            >
-              <FaBriefcase style={{ marginRight: "12px", fontSize: "16px" }} />
-              Jobs
-            </Link>
-          </div>
-
-          {/* Employer Dropdown */}
+          {/* Services Dropdown in Mobile */}
           <div style={{ marginBottom: "8px" }}>
             <button
-              onClick={() => toggleDropdown("employer")}
+              onClick={() => toggleDropdown("services")}
               style={{
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "12px 20px",
-                color: "#ff9800",
+                color: isServicesActive() ? "#ffa500" : "#fff",
                 background: "none",
                 border: "none",
                 fontSize: "16px",
-                fontWeight: "400",
+                fontWeight: isServicesActive() ? "600" : "400",
                 cursor: "pointer",
                 borderBottom: "1px solid rgba(255,255,255,0.1)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center" }}>
-                <FaUniversity
-                  style={{ marginRight: "12px", fontSize: "16px" }}
-                />
-                Employer
+                <FaHandshake style={{ marginRight: "12px", fontSize: "16px" }} />
+                SERVICES
               </div>
-              {openDropdown === "employer" ? (
-                <FaChevronUp />
-              ) : (
-                <FaChevronDown />
-              )}
+              {openDropdown === "services" ? <FaChevronUp /> : <FaChevronDown />}
             </button>
-
-            {openDropdown === "employer" && (
+            {openDropdown === "services" && (
               <div style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
-                <Link
-                  to="/employer/login"
-                  onClick={handleLinkClick}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    backgroundColor: "#ffa500",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ff8c00")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                >
-                  Login / Signup
-                </Link>
-                <Link
-                  to="/dashboard"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/employer"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  Employer
-                </Link>
-                <Link
-                  to="/subscription-plan"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  Plan & Subscription
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Candidates Dropdown */}
-          <div style={{ marginBottom: "8px" }}>
-            <button
-              onClick={() => toggleDropdown("candidates")}
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "12px 20px",
-                color: "#fff",
-                background: "none",
-                border: "none",
-                fontSize: "16px",
-                fontWeight: "400",
-                cursor: "pointer",
-                borderBottom: "1px solid rgba(255,255,255,0.1)",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <FaUsers style={{ marginRight: "12px", fontSize: "16px" }} />
-                Candidates
-              </div>
-              {openDropdown === "candidates" ? (
-                <FaChevronUp />
-              ) : (
-                <FaChevronDown />
-              )}
-            </button>
-
-            {openDropdown === "candidates" && (
-              <div style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
-                {!isLoggedIn && (
+                {[
+                  { path: "/user/user-service-page", label: "All Services" },
+                  { path: "/personalized-matrimony", label: "Personalized Matrimony" },
+                  { path: "/nri-matrimony", label: "NRI Matrimony" },
+                  { path: "/church-partner", label: "Churches - Partner" },
+                ].map(sub => (
                   <Link
-                    to="/employee-registration"
+                    key={sub.path}
+                    to={sub.path}
                     onClick={handleLinkClick}
                     style={{
                       display: "block",
                       padding: "12px 20px 12px 52px",
-                      color: "#fff",
+                      color: isActive(sub.path) ? "#ffa500" : "#fff",
                       textDecoration: "none",
                       fontSize: "14px",
                       borderBottom: "1px solid rgba(255,255,255,0.1)",
-                      transition: "background-color 0.3s ease",
                     }}
-                    onMouseEnter={(e) =>
-                      (e.target.style.backgroundColor = "#ffa500")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.target.style.backgroundColor = "transparent")
-                    }
                   >
-                    Login / Signup
+                    {sub.label}
                   </Link>
-                )}
-                <Link
-                  to="/dashboard"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/job-vacancies"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  Jobs
-                </Link>
+                ))}
               </div>
             )}
           </div>
 
-          {/* About Us Dropdown */}
+          {/* Help Dropdown in Mobile */}
           <div style={{ marginBottom: "8px" }}>
             <button
-              onClick={() => toggleDropdown("about")}
+              onClick={() => toggleDropdown("help")}
               style={{
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "12px 20px",
-                color: "#fff",
+                color: isHelpActive() ? "#ffa500" : "#fff",
                 background: "none",
                 border: "none",
                 fontSize: "16px",
-                fontWeight: "400",
+                fontWeight: isHelpActive() ? "600" : "400",
                 cursor: "pointer",
                 borderBottom: "1px solid rgba(255,255,255,0.1)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center" }}>
-                <FaGraduationCap
-                  style={{ marginRight: "12px", fontSize: "16px" }}
-                />
-                About Us
+                <FaQuestionCircle style={{ marginRight: "12px", fontSize: "16px" }} />
+                HELP & SUPPORT
               </div>
-              {openDropdown === "about" ? <FaChevronUp /> : <FaChevronDown />}
+              {openDropdown === "help" ? <FaChevronUp /> : <FaChevronDown />}
             </button>
-
-            {openDropdown === "about" && (
+            {openDropdown === "help" && (
               <div style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
-                <Link
-                  to="/about-us"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  About EdProfio
-                </Link>
-                <Link
-                  to="/careers"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  Careers
-                </Link>
-                <Link
-                  to="/blogs"
-                  onClick={handleLinkClick}
-                  style={{
-                    display: "block",
-                    padding: "12px 20px 12px 52px",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.1)",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#ffa500")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  Blogs / Press Release
-                </Link>
+                {[
+                  { path: "/help-support", label: "Help & Support" },
+                  { path: "/report-issue", label: "Report Issue" },
+                ].map(sub => (
+                  <Link
+                    key={sub.path}
+                    to={sub.path}
+                    onClick={handleLinkClick}
+                    style={{
+                      display: "block",
+                      padding: "12px 20px 12px 52px",
+                      color: isActive(sub.path) ? "#ffa500" : "#fff",
+                      textDecoration: "none",
+                      fontSize: "14px",
+                      borderBottom: "1px solid rgba(255,255,255,0.1)",
+                    }}
+                  >
+                    {sub.label}
+                  </Link>
+                ))}
               </div>
             )}
           </div>
@@ -1463,58 +682,9 @@ const Header = () => {
             style={{
               padding: "20px",
               borderTop: "1px solid rgba(255,255,255,0.1)",
+              marginTop: "10px"
             }}
           >
-            <Link
-              to="/job-vacancies"
-              onClick={handleLinkClick}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "12px 20px",
-                backgroundColor: "#fff",
-                color: "#063970",
-                textDecoration: "none",
-                fontSize: "16px",
-                fontWeight: "500",
-                borderRadius: "25px",
-                marginBottom: "12px",
-                border: "none",
-              }}
-            >
-              <i
-                className="icon icon-user"
-                style={{ fontSize: "14px", marginRight: "8px" }}
-              ></i>
-              Apply Now
-            </Link>
-
-            <Link
-              to="/post-job"
-              onClick={handleLinkClick}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "12px 20px",
-                backgroundColor: "rgba(255,255,255,0.1)",
-                color: "#fff",
-                textDecoration: "none",
-                fontSize: "16px",
-                fontWeight: "500",
-                borderRadius: "25px",
-                marginBottom: "20px",
-                border: "1px solid rgba(255,255,255,0.3)",
-              }}
-            >
-              <i
-                className="icon icon-briefcase3"
-                style={{ fontSize: "14px", marginRight: "8px" }}
-              ></i>
-              Post Jobs FREE
-            </Link>
-
             <button
               onClick={isLoggedIn ? handleProfileClick : handleLogin}
               style={{
@@ -1523,14 +693,13 @@ const Header = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "12px 20px",
-                backgroundColor: "transparent",
+                backgroundColor: isActive("/user/user-login") || isActive("/user/user-dashboard-page") ? "rgba(255,255,255,0.2)" : "transparent",
                 color: "#fff",
-                border: "none",
+                border: "1px solid rgba(255,255,255,0.3)",
                 fontSize: "16px",
                 fontWeight: "500",
                 cursor: "pointer",
-                borderTop: "1px solid rgba(255,255,255,0.1)",
-                paddingTop: "20px",
+                borderRadius: "25px",
               }}
             >
               {isLoggedIn ? (
@@ -1544,7 +713,7 @@ const Header = () => {
                     className="icon icon-users"
                     style={{ fontSize: "16px", marginRight: "8px" }}
                   ></i>
-                  Login
+                  Login / Register
                 </>
               )}
             </button>

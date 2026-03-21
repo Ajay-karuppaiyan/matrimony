@@ -13,7 +13,7 @@ import cakeIcon from "../assets/images/icon/cake.png";
 const QuickAccess = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(4);
-  
+
   // Service items data with original structure
   const services = [
     {
@@ -140,7 +140,7 @@ const QuickAccess = () => {
   //           background: none !important;
   //         }
   //       `}</style>
-        
+
   //       <div className="container" style={{ 
   //         background: 'white', 
   //         backgroundColor: 'white',

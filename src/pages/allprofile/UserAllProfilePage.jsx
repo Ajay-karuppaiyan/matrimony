@@ -165,9 +165,9 @@ const UserAllProfilePage = () => {
     console.log("My Plan (AllProfiles):", myPlanName);
     console.log("Target Plan (AllProfiles):", targetPlanName);
 
-    const isTargetRestricted = 
-      targetPlanName.includes("platinum") || 
-      targetPlanName.includes("gold") || 
+    const isTargetRestricted =
+      targetPlanName.includes("platinum") ||
+      targetPlanName.includes("gold") ||
       targetPlanName.includes("golden");
 
     if (myPlanName.includes("premium")) {
@@ -440,9 +440,8 @@ const UserAllProfilePage = () => {
                     {filteredUsers.map((user) => (
                       <li key={user._id}>
                         <div
-                          className={`all-pro-box ${
-                            Math.random() > 0.5 ? "user-avil-onli" : ""
-                          }`}
+                          className={`all-pro-box ${Math.random() > 0.5 ? "user-avil-onli" : ""
+                            }`}
                           data-useravil={
                             Math.random() > 0.5 ? "avilyes" : "avilno"
                           }
@@ -468,9 +467,8 @@ const UserAllProfilePage = () => {
                               title="User currently available"
                             >
                               <span
-                                className={`pro-ave-${
-                                  Math.random() > 0.5 ? "yes" : "no"
-                                }`}
+                                className={`pro-ave-${Math.random() > 0.5 ? "yes" : "no"
+                                  }`}
                               ></span>
                             </div>
                             <div className="pro-avl-status">

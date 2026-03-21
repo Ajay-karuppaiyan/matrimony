@@ -383,42 +383,42 @@ const UserSearchResult = () => {
   }, [userId]);
 
   // Initial data fetch
-useEffect(() => {
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const { formData, ...restState } = state || {};
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const { formData, ...restState } = state || {};
 
-      const requestData = {
-        ...restState,
-        ...(formData || {}),
-        userId, // Add userId
-      };
+        const requestData = {
+          ...restState,
+          ...(formData || {}),
+          userId, // Add userId
+        };
 
-      const response = await fetchSearchedProfileData(requestData);
+        const response = await fetchSearchedProfileData(requestData);
 
-      if (response.status === 200) {
-        setUsers(response.data.data || []);
+        if (response.status === 200) {
+          setUsers(response.data.data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+        setUsers([]); // fallback
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching profiles:", error);
-      setUsers([]); // fallback
-    } finally {
-      setLoading(false);
+    };
+
+    // ✅ ALWAYS call API
+    fetchData();
+
+    // ✅ optional filter सेट
+    if (state?.formData?.gender) {
+      setFilters((prev) => ({
+        ...prev,
+        gender: state.formData.gender,
+      }));
     }
-  };
-
-  // ✅ ALWAYS call API
-  fetchData();
-
-  // ✅ optional filter सेट
-  if (state?.formData?.gender) {
-    setFilters((prev) => ({
-      ...prev,
-      gender: state.formData.gender,
-    }));
-  }
-}, [state, userId]);
+  }, [state, userId]);
 
   // Debounced filter effect - calls API when filters change
   useEffect(() => {
@@ -546,9 +546,9 @@ useEffect(() => {
     console.log("My Plan (Search):", myPlanName);
     console.log("Target Plan (Search):", targetPlanName);
 
-    const isTargetRestricted = 
-      targetPlanName.includes("platinum") || 
-      targetPlanName.includes("gold") || 
+    const isTargetRestricted =
+      targetPlanName.includes("platinum") ||
+      targetPlanName.includes("gold") ||
       targetPlanName.includes("golden");
 
     if (myPlanName.includes("premium")) {
@@ -670,10 +670,10 @@ useEffect(() => {
                     style={
                       viewType === "grid"
                         ? {
-                            display: "flex",
-                            flexWrap: "wrap",
-                            margin: "0 -10px",
-                          }
+                          display: "flex",
+                          flexWrap: "wrap",
+                          margin: "0 -10px",
+                        }
                         : {}
                     }
                   >
@@ -683,10 +683,10 @@ useEffect(() => {
                         style={
                           viewType === "grid"
                             ? {
-                                width: "50%",
-                                padding: "0 10px",
-                                marginBottom: "20px",
-                              }
+                              width: "50%",
+                              padding: "0 10px",
+                              marginBottom: "20px",
+                            }
                             : { width: "100%", marginBottom: "20px" }
                         }
                       >
@@ -728,13 +728,13 @@ useEffect(() => {
                               Last login:{" "}
                               {user.lastLogin
                                 ? new Date(user.lastLogin).toLocaleDateString(
-                                    "en-GB",
-                                    {
-                                      day: "2-digit",
-                                      month: "short",
-                                      year: "numeric",
-                                    },
-                                  )
+                                  "en-GB",
+                                  {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  },
+                                )
                                 : "Recently"}
                             </span>
                           </div>
@@ -766,7 +766,7 @@ useEffect(() => {
                             </div>
 
                             {/* Center: Details */}
-                            <div className="col-md-9 col-sm-8 d-flex flex-column" style={{cursor: 'pointer'}} onClick={() => handleViewProfile(user)}>
+                            <div className="col-md-9 col-sm-8 d-flex flex-column" style={{ cursor: 'pointer' }} onClick={() => handleViewProfile(user)}>
                               <div>
                                 <h4
                                   style={{

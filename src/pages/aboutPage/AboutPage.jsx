@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LayoutComponent from "../../components/layouts/LayoutComponent";
 import Footer from "../../components/Footer";
 
 const AboutPage = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="min-h-screen">
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -107,44 +116,53 @@ const AboutPage = () => {
       </section>
       {/* END */}
       {/* START */}
-      <section>
-        <div className="ab-cont">
-          <div className="container">
+      {/* START: COUNTERS SECTION AS A SEPARATE BLOCK */}
+      <section className="py-16 my-10">
+        <div className="container mx-auto px-6 sm:px-10 lg:px-16">
+          <div className="bg-purple-50/80 p-10 md:p-16 rounded-[4rem] shadow-sm border border-purple-100">
             <div className="row">
-              <ul>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full list-none p-0 m-0">
                 <li>
-                  <div className="ab-cont-po">
-                    <i className="fa fa-heart-o" aria-hidden="true" />
+                  <div className="ab-cont-po bg-white p-8 rounded-3xl shadow-md border border-purple-100 flex flex-col items-center text-center gap-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                    <div className="bg-purple-100 p-4 rounded-full text-purple-600">
+                      <i className="fa fa-heart-o text-4xl" aria-hidden="true" />
+                    </div>
                     <div>
-                      <h4>2K</h4>
-                      <span>Couples pared</span>
+                      <h4 className="text-4xl font-extrabold text-gray-800">2K</h4>
+                      <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Couples paired</span>
                     </div>
                   </div>
                 </li>
                 <li>
-                  <div className="ab-cont-po">
-                    <i className="fa fa-users" aria-hidden="true" />
+                  <div className="ab-cont-po bg-white p-8 rounded-3xl shadow-md border border-purple-100 flex flex-col items-center text-center gap-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                    <div className="bg-blue-100 p-4 rounded-full text-blue-600">
+                      <i className="fa fa-users text-4xl" aria-hidden="true" />
+                    </div>
                     <div>
-                      <h4>4000+</h4>
-                      <span>Registered users</span>
+                      <h4 className="text-4xl font-extrabold text-gray-800">4000+</h4>
+                      <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Registered users</span>
                     </div>
                   </div>
                 </li>
                 <li>
-                  <div className="ab-cont-po">
-                    <i className="fa fa-male" aria-hidden="true" />
+                  <div className="ab-cont-po bg-white p-8 rounded-3xl shadow-md border border-purple-100 flex flex-col items-center text-center gap-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                    <div className="bg-green-100 p-4 rounded-full text-green-600">
+                      <i className="fa fa-male text-4xl" aria-hidden="true" />
+                    </div>
                     <div>
-                      <h4>1600+</h4>
-                      <span>Mens</span>
+                      <h4 className="text-4xl font-extrabold text-gray-800">1600+</h4>
+                      <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Groom</span>
                     </div>
                   </div>
                 </li>
                 <li>
-                  <div className="ab-cont-po">
-                    <i className="fa fa-female" aria-hidden="true" />
+                  <div className="ab-cont-po bg-white p-8 rounded-3xl shadow-md border border-purple-100 flex flex-col items-center text-center gap-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                    <div className="bg-pink-100 p-4 rounded-full text-pink-600">
+                      <i className="fa fa-female text-4xl" aria-hidden="true" />
+                    </div>
                     <div>
-                      <h4>2000+</h4>
-                      <span>Womens</span>
+                      <h4 className="text-4xl font-extrabold text-gray-800">2000+</h4>
+                      <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Bride</span>
                     </div>
                   </div>
                 </li>
@@ -154,236 +172,109 @@ const AboutPage = () => {
         </div>
       </section>
       {/* END */}
+      {/* END */}
+      {/* END */}
       {/* RECENT COUPLES */}
-      <section>
-        <div className="hom-partners abo-partners" id="testimonials">
-          <div className="container">
-            <div className="row">
-              {/* SUB TITLE */}
-              <div className="sub-tit-caps">
-                <h2>
-                  Customer{" "}
-                  <span
-                    className="animate animate__animated"
-                    data-ani="animate__flipInX"
-                    data-dely="0.1"
-                  >
-                    Testimonials
-                  </span>
+      {/* CUSTOM TESTIMONIALS SLIDER IN PREMIUM FLOATING BLOCK */}
+      <section className="py-20 my-10">
+        <div className="container mx-auto px-6 sm:px-10 lg:px-16">
+          <div className="bg-purple-50/80 p-10 md:p-16 rounded-[4rem] shadow-sm border border-purple-100 relative group overflow-visible">
+            {/* Background Decorative Elements */}
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-purple-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-200/30 rounded-full blur-3xl"></div>
+
+            <div className="row justify-center text-center mb-16">
+              <div className="col-lg-8">
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight uppercase mb-4">
+                  <span className="text-[#af1684]">Customer</span> <span className="text-gray-900">Testimonials</span>
                 </h2>
-                <p>Fusce imperdiet ullamcorper fringilla.</p>
+                <div className="w-20 h-1 bg-[#af1684] mx-auto rounded-full mb-6"></div>
+                <p className="text-[#a17e54] uppercase tracking-[0.3em] text-xs font-bold font-serif">
+                  Fusce imperdiet ullamcorper fringilla.
+                </p>
               </div>
-              {/* TESTMONIAL BACKGROUND SHAPES */}
-              <div className="wedd-shap">
-                <span className="abo-shap-1" />
-                <span className="abo-shap-3" />
-              </div>
-              {/* SLIDER START */}
-              <div id="demo" className="carousel slide" data-ride="carousel">
-                {/* Wrapper for slides */}
-                <div className="carousel-inner">
-                  <div className="carousel-item active">
-                    <ul>
-                      <li>
-                        <div className="ab-testmo">
-                          <div className="ab-test-rat">
-                            <div className="ab-test-star">
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i
-                                className="fa fa-star-half-o"
-                                aria-hidden="true"
-                              />
-                              <span>(50 Reviews)</span>
-                            </div>
-                            <div className="ab-test-conte">
-                              <p>
-                                It is a long established fact that a reader will
-                                be distracted by the readable content of a page
-                                when looking at its layout.
+            </div>
+
+            <div className="relative group/slider">
+              {(() => {
+                const testimonials = [
+                  { id: 1, name: "John Smith", role: "IT Professional", img: "images/profiles/1.jpg", text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout." },
+                  { id: 2, name: "Julia Ann", role: "Teacher", img: "images/profiles/6.jpg", text: "Finding my soulmate was so easy with Agape Vows. The platform is secure and the profiles are very genuine." },
+                  { id: 3, name: "William Son", role: "Govt Staff", img: "images/profiles/7.jpg", text: "The support team was amazing. They helped me navigate through the process and find the perfect match." },
+                  { id: 4, name: "Anita Roy", role: "Doctor", img: "images/profiles/2.jpg", text: "Professional service and very authentic profiles. I highly recommend Agape Vows to everyone seeking a partner." },
+                  { id: 5, name: "Sarah Khan", role: "Designer", img: "images/profiles/3.jpg", text: "A truly wonderful experience. The team was supportive at each stage. Very happy with the results!" },
+                  
+                ];
+                
+                const itemsToShow = windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3;
+                const maxIndex = Math.max(0, testimonials.length - itemsToShow);
+                const slideWidth = 100 / itemsToShow;
+
+                return (
+                  <div className="px-10 lg:px-0">
+                    <div className="overflow-hidden">
+                      <div 
+                        className="flex transition-transform duration-500 ease-in-out"
+                        style={{ transform: `translateX(-${currentIndex * slideWidth}%)` }}
+                      >
+                        {testimonials.map((item) => (
+                          <div 
+                            key={item.id} 
+                            className="flex-shrink-0 px-4"
+                            style={{ width: `${slideWidth}%` }}
+                          >
+                            <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-md border border-purple-50 flex flex-col h-full transition-all duration-300 hover:shadow-xl group">
+                              <div className="flex text-orange-400 mb-6 space-x-1">
+                                {[...Array(5)].map((_, i) => <i key={i} className="fa fa-star text-sm" />)}
+                                <span className="text-gray-400 text-xs ml-2 font-medium">(50 Reviews)</span>
+                              </div>
+                              <p className="text-gray-600 italic flex-grow mb-8 leading-relaxed text-lg">
+                                {item.text}
                               </p>
+                              <div className="flex items-center gap-5 mt-auto pt-8 border-t border-gray-50">
+                                <img src={item.img} alt={item.name} className="w-16 h-16 rounded-full border-2 border-white shadow-sm object-cover" />
+                                <div className="text-left">
+                                  <h4 className="font-bold text-gray-900 leading-tight text-xl">{item.name}</h4>
+                                  <span className="text-xs text-gray-500 font-bold uppercase tracking-widest leading-loose">{item.role}</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div className="ab-rat-user">
-                            <img src="images/profiles/1.jpg" alt="" />
-                            <div>
-                              <h4>John Smith</h4>
-                              <span>IT Profession</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="ab-testmo">
-                          <div className="ab-test-rat">
-                            <div className="ab-test-star">
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star-o" aria-hidden="true" />
-                              <span>(50 Reviews)</span>
-                            </div>
-                            <div className="ab-test-conte">
-                              <p>
-                                It is a long established fact that a reader will
-                                be distracted by the readable content of a page
-                                when looking at its layout.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="ab-rat-user">
-                            <img src="images/profiles/6.jpg" alt="" />
-                            <div>
-                              <h4>Julia Ann</h4>
-                              <span>Teacher</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="ab-testmo">
-                          <div className="ab-test-rat">
-                            <div className="ab-test-star">
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i
-                                className="fa fa-star-half-o"
-                                aria-hidden="true"
-                              />
-                              <span>(50 Reviews)</span>
-                            </div>
-                            <div className="ab-test-conte">
-                              <p>
-                                It is a long established fact that a reader will
-                                be distracted by the readable content of a page
-                                when looking at its layout.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="ab-rat-user">
-                            <img src="images/profiles/7.jpg" alt="" />
-                            <div>
-                              <h4>William Son</h4>
-                              <span>Government Staff</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Absolute Side Arrows */}
+                    <button 
+                      onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
+                      className={`absolute -left-4 lg:-left-20 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex === 0 ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
+                      disabled={currentIndex === 0}
+                    >
+                      <i className="fa fa-chevron-left text-xl" />
+                    </button>
+                    <button 
+                      onClick={() => setCurrentIndex(prev => Math.min(maxIndex, prev + 1))}
+                      className={`absolute -right-4 lg:-right-20 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex >= maxIndex ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
+                      disabled={currentIndex >= maxIndex}
+                    >
+                      <i className="fa fa-chevron-right text-xl" />
+                    </button>
+
+                    {/* Dots Pagination */}
+                    {maxIndex > 0 && (
+                      <div className="flex justify-center gap-3 mt-12">
+                        {[...Array(maxIndex + 1)].map((_, dot) => (
+                          <button 
+                            key={dot}
+                            onClick={() => setCurrentIndex(dot)}
+                            className={`transition-all duration-300 rounded-full h-3 shadow-inner ${currentIndex === dot ? 'w-10 bg-purple-600' : 'w-3 bg-purple-200 hover:bg-purple-300'}`}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="carousel-item">
-                    <ul>
-                      <li>
-                        <div className="ab-testmo">
-                          <div className="ab-test-rat">
-                            <div className="ab-test-star">
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star-o" aria-hidden="true" />
-                              <span>(50 Reviews)</span>
-                            </div>
-                            <div className="ab-test-conte">
-                              <p>
-                                It is a long established fact that a reader will
-                                be distracted by the readable content of a page
-                                when looking at its layout.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="ab-rat-user">
-                            <img src="images/profiles/1.jpg" alt="" />
-                            <div>
-                              <h4>John Smith</h4>
-                              <span>IT Profession</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="ab-testmo">
-                          <div className="ab-test-rat">
-                            <div className="ab-test-star">
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star-o" aria-hidden="true" />
-                              <span>(50 Reviews)</span>
-                            </div>
-                            <div className="ab-test-conte">
-                              <p>
-                                It is a long established fact that a reader will
-                                be distracted by the readable content of a page
-                                when looking at its layout.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="ab-rat-user">
-                            <img src="images/profiles/6.jpg" alt="" />
-                            <div>
-                              <h4>Julia Ann</h4>
-                              <span>Teacher</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="ab-testmo">
-                          <div className="ab-test-rat">
-                            <div className="ab-test-star">
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i className="fa fa-star" aria-hidden="true" />
-                              <i
-                                className="fa fa-star-half-o"
-                                aria-hidden="true"
-                              />
-                              <span>(50 Reviews)</span>
-                            </div>
-                            <div className="ab-test-conte">
-                              <p>
-                                It is a long established fact that a reader will
-                                be distracted by the readable content of a page
-                                when looking at its layout.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="ab-rat-user">
-                            <img src="images/profiles/7.jpg" alt="" />
-                            <div>
-                              <h4>William Son</h4>
-                              <span>Government Staff</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                {/* Left and right controls */}
-                <a
-                  className="carousel-control-prev"
-                  href="#demo"
-                  data-slide="prev"
-                >
-                  <span className="carousel-control-prev-icon" />
-                </a>
-                <a
-                  className="carousel-control-next"
-                  href="#demo"
-                  data-slide="next"
-                >
-                  <span className="carousel-control-next-icon" />
-                </a>
-              </div>
+                );
+              })()}
             </div>
           </div>
         </div>
