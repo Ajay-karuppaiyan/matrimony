@@ -14,6 +14,8 @@ import {
   getMyChatList,
   getChatMessages,
   sendChatMessage,
+  blockUser,
+  clearChatHistory,
 } from "../api/axiosService/userAuthService.js";
 
 const UserChatPage = () => {
@@ -145,6 +147,36 @@ const UserChatPage = () => {
     setSelectedChat(null);
     setMessages([]);
     setIsChatOpen(false);
+  };
+
+  const handleBlockUser = async (profileId) => {
+    try {
+      const response = await blockUser(userId, profileId);
+      if (response.status === 200) {
+        // Remove from chat list
+        setChatList((prev) => prev.filter((chat) => chat.participant._id !== profileId));
+        handleCloseChatbox();
+        alert("User blocked successfully! They will appear in the Blocked section.");
+      }
+    } catch (error) {
+       console.error("Error blocking user:", error);
+       alert("Failed to block user.");
+    }
+  };
+
+  const handleClearChat = async (chatId) => {
+    try {
+      const response = await clearChatHistory(chatId);
+      if (response.status === 200) {
+        setMessages([]);
+        // Update last message in chat list
+        setChatList((prev) => prev.map(c => 
+          c.chatId === chatId ? { ...c, lastMessage: null } : c
+        ));
+      }
+    } catch (error) {
+      console.error("Error clearing chat:", error);
+    }
   };
 
   const handleChatSubmit = async (e) => {
@@ -328,8 +360,21 @@ const UserChatPage = () => {
                                 </div>
                                 <div className="db-chat-bio">
                                   <h5>{chat.participant.name}</h5>
-                                  <span>
-                                    {chat?.lastMessage?.message || ""}
+                                  <span style={{ 
+                                    display: 'block', 
+                                    maxWidth: '180px', 
+                                    textOverflow: 'ellipsis', 
+                                    whiteSpace: 'nowrap', 
+                                    overflow: 'hidden' 
+                                  }}>
+                                    {chat?.lastMessage ? (
+                                      <>
+                                        <strong>{chat.lastMessage.isMyMessage ? "You: " : `${chat.participant.name.split(' ')[0]}: `}</strong>
+                                        {chat.lastMessage.message}
+                                      </>
+                                    ) : (
+                                      "No messages yet"
+                                    )}
                                   </span>
                                 </div>
                                 <div className="db-chat-info">
@@ -372,6 +417,8 @@ const UserChatPage = () => {
           socket={socket}
           userId={userId}
           setChatMessages={setMessages}
+          onBlockUser={handleBlockUser}
+          onClearChat={() => handleClearChat(selectedChat.chatId)}
         />
       )}
     </div>

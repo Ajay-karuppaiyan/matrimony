@@ -1,6 +1,6 @@
 import React from "react";
 import LayoutComponent from "../../components/layouts/LayoutComponent";
-
+import Footer from "../../components/Footer";
 const FaqPage = () => {
   return (
     <div className="min-h-screen">
@@ -182,7 +182,7 @@ const FaqPage = () => {
       </div>
       {/* END */}
       {/* FOOTER */}
-      <section className="wed-hom-footer">
+      {/* <section className="wed-hom-footer">
         <div className="container">
           <div className="row foot-supp">
             <h2>
@@ -247,8 +247,8 @@ const FaqPage = () => {
                 </li>
               </ul>
             </div>
-          </div>
-          <div className="row foot-count">
+          </div> */}
+          {/* <div className="row foot-count">
             <p>
               Company name Site - Trusted by over thousands of Boys &amp; Girls
               for successfull marriage.{" "}
@@ -256,25 +256,13 @@ const FaqPage = () => {
                 Join us today !
               </a>
             </p>
-          </div>
-        </div>
-      </section>
+          </div> */}
+        {/* </div>
+      </section> */}
       {/* END */}
       {/* COPYRIGHTS */}
       <section>
-        <div className="cr">
-          <div className="container">
-            <div className="row">
-              <p>
-                Copyright © <span id="cry">2017-2020</span>{" "}
-                <a href="#!" target="_blank">
-                  Company.com
-                </a>{" "}
-                All rights reserved.
-              </p>
-            </div>
-          </div>
-        </div>
+         <Footer />
       </section>
     </div>
   );

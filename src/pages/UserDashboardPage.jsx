@@ -509,7 +509,7 @@ const UserDashboardPage = () => {
       {/* Footer */}
       <ToastContainer />
       <Footer />
-      <CopyRights />
+      {/*<CopyRights />*/}
     </div>
   );
 };

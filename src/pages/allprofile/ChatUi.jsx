@@ -74,6 +74,7 @@ const ChatUi = ({
   userId,
   setChatMessages, // NEW PROP
   onBlockUser,     // NEW PROP
+  onClearChat      // NEW PROP
 }) => {
   console.log(chatMessages)
   const messagesEndRef = useRef(null);
@@ -227,7 +228,9 @@ const ChatUi = ({
 
   const handleClearChat = () => {
     if (window.confirm("Are you sure you want to clear this entire chat history?")) {
-      if (setChatMessages) {
+      if (onClearChat) {
+        onClearChat();
+      } else if (setChatMessages) {
         setChatMessages([]);
       }
       setIsMenuOpen(false);

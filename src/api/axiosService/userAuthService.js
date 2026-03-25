@@ -320,3 +320,37 @@ export const reportIssue = async (formData) => {
     throw error;
   }
 };
+
+export const getUserCounts = async () => {
+  try {
+    const response = await userInstance.get(`/get-user-counts`);
+    return response;
+  } catch (error) {
+    console.error("Error fetching user counts:", error);
+    throw error;
+  }
+};
+
+// Block user
+export const blockUser = async (userId, blockedUserId) => {
+  try {
+    const response = await userInstance.post(`/api/users/${userId}/block`, {
+      blockedUserId,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error blocking user:", error);
+    throw error;
+  }
+};
+
+// Clear chat history
+export const clearChatHistory = async (chatId) => {
+  try {
+    const response = await userInstance.post(`/clear-chat/${chatId}`);
+    return response;
+  } catch (error) {
+    console.error("Error clearing chat history:", error);
+    throw error;
+  }
+};

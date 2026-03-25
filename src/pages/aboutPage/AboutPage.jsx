@@ -1,16 +1,43 @@
 import React, { useState, useEffect } from "react";
 import LayoutComponent from "../../components/layouts/LayoutComponent";
 import Footer from "../../components/Footer";
+import { getUserCounts } from "../../api/axiosService/userAuthService";
 
 const AboutPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  const [counts, setCounts] = useState({
+    total: 0,
+    male: 0,
+    female: 0,
+  });
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const res = await getUserCounts();
+
+        if (res.data.success) {
+          setCounts({
+            total: res.data.data.totalUsers,
+            male: res.data.data.maleCount,
+            female: res.data.data.femaleCount,
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching counts:", err);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
 
   return (
     <div className="min-h-screen">
@@ -128,7 +155,7 @@ const AboutPage = () => {
                       <i className="fa fa-heart-o text-4xl" aria-hidden="true" />
                     </div>
                     <div>
-                      <h4 className="text-4xl font-extrabold text-gray-800">2K</h4>
+                      <h4 className="text-4xl font-extrabold text-gray-800">5</h4>
                       <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Couples paired</span>
                     </div>
                   </div>
@@ -139,7 +166,9 @@ const AboutPage = () => {
                       <i className="fa fa-users text-4xl" aria-hidden="true" />
                     </div>
                     <div>
-                      <h4 className="text-4xl font-extrabold text-gray-800">4000+</h4>
+                      <h4 className="text-4xl font-extrabold text-gray-800">
+                        {counts.total}+
+                      </h4>
                       <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Registered users</span>
                     </div>
                   </div>
@@ -150,7 +179,9 @@ const AboutPage = () => {
                       <i className="fa fa-male text-4xl" aria-hidden="true" />
                     </div>
                     <div>
-                      <h4 className="text-4xl font-extrabold text-gray-800">1600+</h4>
+                      <h4 className="text-4xl font-extrabold text-gray-800">
+                        {counts.male}+
+                      </h4>
                       <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Groom</span>
                     </div>
                   </div>
@@ -161,7 +192,9 @@ const AboutPage = () => {
                       <i className="fa fa-female text-4xl" aria-hidden="true" />
                     </div>
                     <div>
-                      <h4 className="text-4xl font-extrabold text-gray-800">2000+</h4>
+                      <h4 className="text-4xl font-extrabold text-gray-800">
+                        {counts.female}+
+                      </h4>
                       <span className="text-gray-500 uppercase tracking-widest text-xs font-bold block mt-2">Bride</span>
                     </div>
                   </div>
@@ -203,9 +236,9 @@ const AboutPage = () => {
                   { id: 3, name: "William Son", role: "Govt Staff", img: "images/profiles/7.jpg", text: "The support team was amazing. They helped me navigate through the process and find the perfect match." },
                   { id: 4, name: "Anita Roy", role: "Doctor", img: "images/profiles/2.jpg", text: "Professional service and very authentic profiles. I highly recommend Agape Vows to everyone seeking a partner." },
                   { id: 5, name: "Sarah Khan", role: "Designer", img: "images/profiles/3.jpg", text: "A truly wonderful experience. The team was supportive at each stage. Very happy with the results!" },
-                  
+
                 ];
-                
+
                 const itemsToShow = windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3;
                 const maxIndex = Math.max(0, testimonials.length - itemsToShow);
                 const slideWidth = 100 / itemsToShow;
@@ -213,13 +246,13 @@ const AboutPage = () => {
                 return (
                   <div className="px-10 lg:px-0">
                     <div className="overflow-hidden">
-                      <div 
+                      <div
                         className="flex transition-transform duration-500 ease-in-out"
                         style={{ transform: `translateX(-${currentIndex * slideWidth}%)` }}
                       >
                         {testimonials.map((item) => (
-                          <div 
-                            key={item.id} 
+                          <div
+                            key={item.id}
                             className="flex-shrink-0 px-4"
                             style={{ width: `${slideWidth}%` }}
                           >
@@ -245,14 +278,14 @@ const AboutPage = () => {
                     </div>
 
                     {/* Absolute Side Arrows */}
-                    <button 
+                    <button
                       onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
                       className={`absolute -left-4 lg:-left-20 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex === 0 ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
                       disabled={currentIndex === 0}
                     >
                       <i className="fa fa-chevron-left text-xl" />
                     </button>
-                    <button 
+                    <button
                       onClick={() => setCurrentIndex(prev => Math.min(maxIndex, prev + 1))}
                       className={`absolute -right-4 lg:-right-20 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex >= maxIndex ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
                       disabled={currentIndex >= maxIndex}
@@ -264,7 +297,7 @@ const AboutPage = () => {
                     {maxIndex > 0 && (
                       <div className="flex justify-center gap-3 mt-12">
                         {[...Array(maxIndex + 1)].map((_, dot) => (
-                          <button 
+                          <button
                             key={dot}
                             onClick={() => setCurrentIndex(dot)}
                             className={`transition-all duration-300 rounded-full h-3 shadow-inner ${currentIndex === dot ? 'w-10 bg-purple-600' : 'w-3 bg-purple-200 hover:bg-purple-300'}`}
