@@ -456,7 +456,6 @@
 // };
 
 // export default ReportIssue;
-
 import React, { useEffect, useState } from "react";
 import LayoutComponent from "../components/layouts/LayoutComponent";
 import Footer from "../components/Footer";
@@ -485,6 +484,7 @@ const ReportIssue = () => {
           const res = await getUserProfile(userId);
           if (res.status === 200) {
             const data = res.data.data;
+
             setFormData((prev) => ({
               ...prev,
               userName: data.userName || "",
@@ -514,18 +514,19 @@ const ReportIssue = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isLoggedIn) {
-      alert("Please login to report an issue");
+    // ✅ Validation (for both guest & logged-in users)
+    if (!formData.userName || !formData.userEmail || !formData.details) {
+      alert("Please fill all required fields");
       return;
     }
-
-    console.log("Form Data:", formData);
 
     try {
       const data = new FormData();
 
-      // ✅ FIX: add userId (VERY IMPORTANT)
-      data.append("userId", userId);
+      // ✅ Append only if logged in
+      if (userId) {
+        data.append("userId", userId);
+      }
 
       data.append("userName", formData.userName);
       data.append("userEmail", formData.userEmail);
@@ -542,16 +543,18 @@ const ReportIssue = () => {
       if (res.status === 200 || res.status === 201) {
         alert("Issue submitted successfully ✅");
 
-        setFormData((prev) => ({
-          ...prev,
+        setFormData({
+          userName: isLoggedIn ? formData.userName : "",
+          userEmail: isLoggedIn ? formData.userEmail : "",
+          userMobile: isLoggedIn ? formData.userMobile : "",
+          agwid: isLoggedIn ? formData.agwid : "",
           details: "",
           attachment: null,
-        }));
+        });
       }
     } catch (error) {
       console.error("Error submitting issue:", error);
 
-      // ✅ Better debug
       if (error.response) {
         console.log("Server Error:", error.response.data);
       }
@@ -568,6 +571,7 @@ const ReportIssue = () => {
 
       <div className="pt-28">
 
+        {/* Hero Section */}
         <section className="bg-gray-600 text-white py-20">
           <div className="max-w-6xl mx-auto px-4 text-center">
             <span className="bg-white text-purple-600 px-4 py-1 rounded-full text-sm font-semibold">
@@ -575,130 +579,144 @@ const ReportIssue = () => {
             </span>
 
             <h1 className="text-5xl md:text-6xl font-extrabold mt-6 text-purple-500">
-              Report & Issue
+              Report Your Issue
             </h1>
 
             <p className="mt-4 text-lg text-purple-100 max-w-2xl mx-auto">
               Facing a problem? Let us know and we’ll fix it quickly and efficiently.
             </p>
+
+            <p className="mt-2 text-sm text-gray-200">
+              You can report issues even without logging in.
+            </p>
           </div>
         </section>
 
+        {/* Form Section */}
         <section className="py-20 px-4">
-          {!isLoggedIn ? (
-            <div className="text-center text-red-600 font-semibold text-lg">
-              Please login to report an issue.
-            </div>
-          ) : (
-            <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-10 border border-gray-100">
+          <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-10 border border-gray-100">
 
-              <h2 className="text-2xl font-semibold mb-10 text-gray-800 text-center">
-                Submit Your Issue
-              </h2>
+            <h2 className="text-2xl font-semibold mb-10 text-gray-800 text-center">
+              Submit Your Issue
+            </h2>
 
-              <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-8">
 
-                <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-6">
 
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">
-                      Username
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.userName}
-                      disabled
-                      className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">
-                      User ID
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.agwid}
-                      disabled
-                      className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.userEmail}
-                      disabled
-                      className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">
-                      Phone Number
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.userMobile}
-                      disabled
-                      className="w-full mt-2 px-4 py-3 rounded-xl bg-gray-100 border"
-                    />
-                  </div>
-                </div>
-
+                {/* Username */}
                 <div>
                   <label className="text-sm font-medium text-gray-600">
-                    Issue Details
+                    Username *
                   </label>
-                  <textarea
-                    name="details"
-                    value={formData.details}
+                  <input
+                    type="text"
+                    name="userName"
+                    value={formData.userName}
                     onChange={handleChange}
-                    rows="5"
-                    required
-                    placeholder="Explain your issue clearly..."
-                    className="w-full mt-2 px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none"
+                    disabled={isLoggedIn}
+                    className="w-full mt-2 px-4 py-3 rounded-xl border bg-gray-100 disabled:bg-gray-100"
                   />
                 </div>
 
+                {/* User ID */}
                 <div>
                   <label className="text-sm font-medium text-gray-600">
-                    Attachment
+                    User ID
+                  </label>
+                  <input
+                    type="text"
+                    name="agwid"
+                    value={formData.agwid}
+                    onChange={handleChange}
+                    disabled={isLoggedIn}
+                    className="w-full mt-2 px-4 py-3 rounded-xl border bg-gray-100 disabled:bg-gray-100"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    name="userEmail"
+                    value={formData.userEmail}
+                    onChange={handleChange}
+                    disabled={isLoggedIn}
+                    className="w-full mt-2 px-4 py-3 rounded-xl border bg-gray-100 disabled:bg-gray-100"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    name="userMobile"
+                    value={formData.userMobile}
+                    onChange={handleChange}
+                    disabled={isLoggedIn}
+                    className="w-full mt-2 px-4 py-3 rounded-xl border bg-gray-100 disabled:bg-gray-100"
+                  />
+                </div>
+              </div>
+
+              {/* Issue Details */}
+              <div>
+                <label className="text-sm font-medium text-gray-600">
+                  Issue Details *
+                </label>
+                <textarea
+                  name="details"
+                  value={formData.details}
+                  onChange={handleChange}
+                  rows="5"
+                  required
+                  placeholder="Explain your issue clearly..."
+                  className="w-full mt-2 px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none"
+                />
+              </div>
+
+              {/* Attachment */}
+              <div>
+                <label className="text-sm font-medium text-gray-600">
+                  Attachment
+                </label>
+
+                <div className="mt-3 flex items-center gap-4">
+                  <label className="cursor-pointer bg-gray-100 px-6 py-3 rounded-xl border hover:bg-gray-200 text-sm transition">
+                    Choose File
+                    <input
+                      type="file"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
                   </label>
 
-                  <div className="mt-3 flex items-center gap-4">
-                    <label className="cursor-pointer bg-gray-100 px-6 py-3 rounded-xl border hover:bg-gray-200 text-sm transition">
-                      Choose File
-                      <input
-                        type="file"
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                    </label>
-
-                    <span className="text-sm text-gray-500">
-                      {formData.attachment
-                        ? formData.attachment.name
-                        : "No file selected"}
-                    </span>
-                  </div>
+                  <span className="text-sm text-gray-500">
+                    {formData.attachment
+                      ? formData.attachment.name
+                      : "No file selected"}
+                  </span>
                 </div>
+              </div>
 
-                <div className="flex justify-end pt-6">
-                  <button
-                    type="submit"
-                    className="bg-purple-600 text-white px-10 py-3 rounded-xl font-medium hover:bg-purple-700 transition shadow-md"
-                  >
-                    Submit Issue 🚀
-                  </button>
-                </div>
+              {/* Submit Button */}
+              <div className="flex justify-end pt-6">
+                <button
+                  type="submit"
+                  className="bg-purple-600 text-white px-10 py-3 rounded-xl font-medium hover:bg-purple-700 transition shadow-md"
+                >
+                  Submit Issue 🚀
+                </button>
+              </div>
 
-              </form>
-            </div>
-          )}
+            </form>
+          </div>
         </section>
 
       </div>

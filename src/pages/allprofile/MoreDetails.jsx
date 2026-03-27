@@ -1824,6 +1824,17 @@ const VideoCard = ({ videoUrl }) => {
 
 const MoreDetails = () => {
   const { profileId } = useParams();
+  const chipStyle = {
+  background: "#f3f4f6",
+  padding: "6px 12px",
+  borderRadius: "20px",
+  fontSize: "0.9rem",
+  fontWeight: "500",
+  color: "#333",
+  display: "flex",
+  alignItems: "center",
+  gap: "5px",
+};
   const navigate = useNavigate();
   const currentUserId = localStorage.getItem("userId");
 
@@ -1835,6 +1846,17 @@ const MoreDetails = () => {
   const [loadingUser, setLoadingUser] = useState(true);
   const [showContact, setShowContact] = useState(false);
   const [showUpgradePopup, setShowUpgradePopup] = useState(false);
+
+  // Disable right-click
+  useEffect(() => {
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+    window.addEventListener("contextmenu", handleContextMenu);
+    return () => {
+      window.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
 
   // Chat States
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -2018,6 +2040,7 @@ const MoreDetails = () => {
                 </div>
               </div>
 
+             
               <button
                 disabled={!isPaidUser}
                 className={`interest-btn ${isPaidUser ? "" : "disabled"}`}
@@ -2035,14 +2058,55 @@ const MoreDetails = () => {
               >
                 Send Interest
               </button>
+
+               {/* View Contact Information Button moved immediately below profile picture */}
+              {!showContact && (
+                <button
+                  onClick={handleContactClick}
+                  className="view-contact-btn"
+                  style={{ width: "100%", marginBottom: "10px" }}
+                >
+                  View Contact Information
+                </button>
+              )}
+              {/* Contact Details in LEFT COLUMN */}
+{showContact && (
+  <div style={{ width: "100%", marginTop: "10px" }}>
+    <div style={{ ...chipStyle, width: "100%" }}>
+      👤 {userInfo?.userName}
+    </div>
+
+    <div style={{ ...chipStyle, width: "100%" }}>
+      📞 {userInfo?.userMobile}
+    </div>
+
+    {userInfo?.alternateMobile && (
+      <div style={{ ...chipStyle, width: "100%" }}>
+        📱 {userInfo?.alternateMobile}
+      </div>
+    )}
+
+    {userInfo?.userEmail && (
+      <div style={{ ...chipStyle, width: "100%" }}>
+        📧 {userInfo?.userEmail}
+      </div>
+    )}
+
+    {userInfo?.city && (
+      <div style={{ ...chipStyle, width: "100%" }}>
+        📍 {userInfo?.city}, {userInfo?.state}
+      </div>
+    )}
+  </div>
+)}
             </div>
           </div>
 
           {/* Right Column */}
           <div className="profile-right">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
-              <div className="agw-id" style={{ marginBottom: "0" }}>
-                AGW ID: {userInfo?.agwid || "N/A"}
+              <div className="agv-id" style={{ marginBottom: "0" }}>
+                AGV ID: {userInfo?.agwid || "N/A"}
               </div>
               <button
                 className="start-chat-top-btn"
@@ -2051,6 +2115,88 @@ const MoreDetails = () => {
                 Start Chat
               </button>
             </div>
+
+            {/* Profile Snippet at top */}
+            {userInfo && (
+             <div
+  style={{
+    background: "#fff",
+    padding: "15px 20px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.05)",
+    marginBottom: "25px",
+    borderLeft: "4px solid #7c3aed",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "10px",
+    }}
+  >
+    {calculateAge(userInfo?.dateOfBirth) && (
+      <span style={chipStyle}>
+        🎂 {calculateAge(userInfo.dateOfBirth)} yrs
+      </span>
+    )}
+
+    {userInfo?.height && (
+      <span style={chipStyle}>
+        📏 {userInfo.height}
+      </span>
+    )}
+
+    {userInfo?.motherTongue && (
+      <span style={chipStyle}>
+        🗣 {userInfo.motherTongue}
+      </span>
+    )}
+
+    {userInfo?.occupation && (
+      <span style={chipStyle}>
+        💼 {userInfo.occupation}
+      </span>
+    )}
+
+    {userInfo?.annualIncome && (
+      <span style={chipStyle}>
+        💰 {userInfo.annualIncome}
+      </span>
+    )}
+
+    {userInfo?.caste && (
+      <span style={chipStyle}>
+        🧬 {userInfo.caste}
+      </span>
+    )}
+
+    {userInfo?.fathersNative && (
+      <span style={chipStyle}>
+        📍 {userInfo.fathersNative}
+      </span>
+    )}
+
+    {userInfo?.maritalStatus && (
+      <span style={chipStyle}>
+        💍 {userInfo.maritalStatus}
+      </span>
+    )}
+
+    {userInfo?.education && (
+      <span style={chipStyle}>
+        🎓 {userInfo.education}
+      </span>
+    )}
+
+    {userInfo?.religion && (
+      <span style={chipStyle}>
+        ⛪ {userInfo.religion}
+      </span>
+    )}
+  </div>
+</div>
+            )}
 
             {userInfo?.aboutMe && (
               <div className="about-me card">
@@ -2082,7 +2228,6 @@ const MoreDetails = () => {
                 icon: faInfoCircle,
                 data: [
                   { label: "Profile Created By", value: userInfo?.profileCreatedFor },
-                  { label: "Name", value: userInfo?.userName },
                   { label: "Age", value: userInfo?.dateOfBirth ? `${calculateAge(userInfo.dateOfBirth)} years` : null },
                   { label: "Body Type", value: userInfo?.bodyType },
                   { label: "Physical Status", value: userInfo?.physicalStatus },
@@ -2143,24 +2288,25 @@ const MoreDetails = () => {
                   { label: "Annual Income", value: userInfo?.annualIncome },
                 ],
               },
-              {
-                title: "Contact Information",
-                icon: faAddressCard,
-                data: showContact
-                  ? [
-                    { label: "Mobile Number", value: userInfo?.userMobile },
-                    { label: "Alternate Mobile", value: userInfo?.alternateMobile },
-                    { label: "Landline", value: userInfo?.landlineNumber },
-                    { label: "Email", value: userInfo?.userEmail },
-                    { label: "Current Address", value: userInfo?.currentAddress },
-                    { label: "Permanent Address", value: userInfo?.permanentAddress },
-                    { label: "City", value: userInfo?.city },
-                    { label: "State", value: userInfo?.state },
-                    { label: "Pincode", value: userInfo?.pincode },
-                    { label: "Citizen Of", value: userInfo?.citizenOf },
-                  ]
-                  : [],
-              },
+              // {
+              //   title: "Contact Information",
+              //   icon: faAddressCard,
+              //   data: showContact
+              //     ? [
+              //         { label: "Name", value: userInfo?.userName },
+              //         { label: "Mobile Number", value: userInfo?.userMobile },
+              //       { label: "Alternate Mobile", value: userInfo?.alternateMobile },
+              //       { label: "Landline", value: userInfo?.landlineNumber },
+              //       { label: "Email", value: userInfo?.userEmail },
+              //       { label: "Current Address", value: userInfo?.currentAddress },
+              //       { label: "Permanent Address", value: userInfo?.permanentAddress },
+              //       { label: "City", value: userInfo?.city },
+              //       { label: "State", value: userInfo?.state },
+              //       { label: "Pincode", value: userInfo?.pincode },
+              //       { label: "Citizen Of", value: userInfo?.citizenOf },
+              //     ]
+              //     : [],
+              // },
               {
                 title: "Lifestyle & Hobbies",
                 icon: faMusic,
@@ -2200,13 +2346,6 @@ const MoreDetails = () => {
               },
             ].map((section, idx) => (
               <React.Fragment key={idx}>
-                {section.title === "Contact Information" && !showContact && (
-                  <div className="contact-btn-wrapper">
-                    <button onClick={handleContactClick} className="view-contact-btn">
-                      View Contact Information
-                    </button>
-                  </div>
-                )}
 
                <ProfileSection title={section.title} icon={section.icon}>
   <div className="profile-section-grid">
@@ -2311,7 +2450,7 @@ const MoreDetails = () => {
         .zoom-btn { position: absolute; top: 10px; right: 10px; background: #7c3aed; color: #fff; border-radius: 50%; padding: 6px 10px; cursor: pointer; font-size: 1.1rem; }
         .interest-btn { width: 100%; background: #7c3aed; color: #fff; border-radius: 8px; padding: 12px 0; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .interest-btn.disabled { background: #999; cursor: not-allowed; opacity: 0.6; }
-        .agw-id { text-align: center; background: rgba(124, 58, 237, 0.85); color: #fff; padding: 8px 16px; border-radius: 20px; font-weight: 600; display: inline-block; font-size: 1rem; }
+        .agv-id { text-align: center; background: rgba(124, 58, 237, 0.85); color: #fff; padding: 8px 16px; border-radius: 20px; font-weight: 600; display: inline-block; font-size: 1rem; }
         .start-chat-top-btn { background: #3b82f6; color: #fff; padding: 10px 24px; border-radius: 20px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
         .start-chat-top-btn:hover { background: #2563eb; }
         .about-me { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); margin-bottom: 25px; }
@@ -2372,6 +2511,21 @@ const MoreDetails = () => {
         .info-value { color: #333; font-weight: 600; flex: 1; word-break: break-word; }
         .profile-section.card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .profile-section-title { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 600; color: #333; }
+.profile-snippet-card {
+  background: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+  border-left: 4px solid #7c3aed;
+}
+
+.snippet-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
         .profile-section-grid {
   display: flex;
   gap: 50px;

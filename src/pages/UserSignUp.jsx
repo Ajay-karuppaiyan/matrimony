@@ -210,7 +210,6 @@
 
 // export default UserSignUp;
 
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -223,6 +222,9 @@ import LayoutComponent from "../components/layouts/LayoutComponent";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
+// ✅ NEW ICON IMPORT
+import { FaEye } from "react-icons/fa";
+
 const UserSignUp = () => {
   const navigate = useNavigate();
 
@@ -230,7 +232,7 @@ const UserSignUp = () => {
     name: "",
     email: "",
     phone: "",
-    countryCode: "in", // ✅ NEW
+    countryCode: "in",
     password: "",
     agree: false,
   });
@@ -238,6 +240,9 @@ const UserSignUp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // ✅ NEW STATE FOR PASSWORD VIEW
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -293,7 +298,6 @@ const UserSignUp = () => {
       return;
     }
 
-    // ✅ PHONE VALIDATION CHECK
     const phoneError = validatePhone();
     if (phoneError) {
       setError(phoneError);
@@ -372,7 +376,7 @@ const UserSignUp = () => {
                           <label className="lb">Name:</label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control custom-input"
                             placeholder="Enter your full name"
                             name="name"
                             value={formData.name}
@@ -385,7 +389,7 @@ const UserSignUp = () => {
                           <label className="lb">Email:</label>
                           <input
                             type="email"
-                            className="form-control"
+                            className="form-control custom-input"
                             placeholder="Enter email"
                             name="email"
                             value={formData.email}
@@ -394,7 +398,7 @@ const UserSignUp = () => {
                           />
                         </div>
 
-                        {/* ✅ UPDATED PHONE INPUT */}
+                        {/* PHONE INPUT */}
                         <div className="form-group">
                           <label className="lb">Phone:</label>
 
@@ -418,16 +422,31 @@ const UserSignUp = () => {
                           )}
                         </div>
 
-                        <div className="form-group">
+                        {/* ✅ PASSWORD FIELD WITH HOLD VIEW */}
+                        <div className="form-group" style={{ position: "relative" }}>
                           <label className="lb">Password:</label>
+
                           <input
-                            type="password"
-                            className="form-control"
+                            type={showPassword ? "text" : "password"}
+                            className="form-control custom-input"
                             placeholder="Enter password"
                             name="password"
                             value={formData.password}
                             onChange={handleInputChange}
                             required
+                          />
+
+                          <FaEye
+                            style={{
+                              position: "absolute",
+                              right: "12px",
+                              top: "42px",
+                              cursor: "pointer",
+                              color: "#555",
+                            }}
+                            onMouseDown={() => setShowPassword(true)}
+                            onMouseUp={() => setShowPassword(false)}
+                            onMouseLeave={() => setShowPassword(false)}
                           />
                         </div>
 
@@ -473,7 +492,6 @@ const UserSignUp = () => {
       </div>
 
       <Footer />
-      <CopyRights />
     </div>
   );
 };

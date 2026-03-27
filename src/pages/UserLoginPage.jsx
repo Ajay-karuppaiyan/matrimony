@@ -224,9 +224,8 @@
 
 // export default UserLoginPage;
 
-
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom"; // ✅ location added
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Footer from "../components/Footer";
 import CopyRights from "../components/CopyRights";
@@ -235,7 +234,7 @@ import LayoutComponent from "../components/layouts/LayoutComponent";
 
 const UserLoginPage = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ get redirect info
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -246,6 +245,9 @@ const UserLoginPage = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+
+  // 👁️ password visibility state
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -295,7 +297,6 @@ const UserLoginPage = () => {
       const response = await verifyUser(formData);
 
       if (response.status === 200) {
-        // ✅ Store user data
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("userName", response.data.userName);
 
@@ -303,16 +304,15 @@ const UserLoginPage = () => {
           localStorage.setItem("userImage", response.data.profileImage);
         }
 
-        // ✅ IMPORTANT: redirect logic
-       const redirectPath =
-  location.state?.from || "/user/user-dashboard-page";
+        const redirectPath =
+          location.state?.from || "/user/user-dashboard-page";
 
-navigate(redirectPath, {
-  replace: true,
-  state: {
-    formData: location.state?.formData, // 🔥 முக்கியம்
-  },
-});
+        navigate(redirectPath, {
+          replace: true,
+          state: {
+            formData: location.state?.formData,
+          },
+        });
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -374,6 +374,7 @@ navigate(redirectPath, {
                           </div>
                         )}
 
+                        {/* Email */}
                         <div className="form-group">
                           <label className="lb">Email:</label>
                           <input
@@ -387,6 +388,7 @@ navigate(redirectPath, {
                             value={formData.email}
                             onChange={handleInputChange}
                             disabled={isLoading}
+                            style={{ caretColor: "black" }} // ✅ cursor fix
                           />
                           {errors.email && (
                             <div className="invalid-feedback">
@@ -395,10 +397,15 @@ navigate(redirectPath, {
                           )}
                         </div>
 
-                        <div className="form-group">
+                        {/* Password */}
+                        <div
+                          className="form-group"
+                          style={{ position: "relative" }}
+                        >
                           <label className="lb">Password:</label>
+
                           <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             className={`form-control ${
                               errors.password ? "is-invalid" : ""
                             }`}
@@ -408,7 +415,28 @@ navigate(redirectPath, {
                             value={formData.password}
                             onChange={handleInputChange}
                             disabled={isLoading}
+                            style={{
+                              paddingRight: "40px",
+                              caretColor: "black", // ✅ cursor fix
+                            }}
                           />
+
+                          {/* 👁️ Press & Hold */}
+                          <span
+                            onMouseDown={() => setShowPassword(true)}
+                            onMouseUp={() => setShowPassword(false)}
+                            onMouseLeave={() => setShowPassword(false)}
+                            style={{
+                              position: "absolute",
+                              right: "10px",
+                              top: "38px",
+                              cursor: "pointer",
+                              userSelect: "none",
+                            }}
+                          >
+                            👁️
+                          </span>
+
                           {errors.password && (
                             <div className="invalid-feedback">
                               {errors.password}
@@ -416,6 +444,7 @@ navigate(redirectPath, {
                           )}
                         </div>
 
+                        {/* Remember me */}
                         <div className="form-group form-check">
                           <label className="form-check-label">
                             <input
@@ -430,6 +459,7 @@ navigate(redirectPath, {
                           </label>
                         </div>
 
+                        {/* Submit */}
                         <button
                           type="submit"
                           className="btn"
@@ -448,7 +478,9 @@ navigate(redirectPath, {
                         className="forgot-password"
                         style={{ marginTop: "15px" }}
                       >
-                        <a href="/forgot-password">Forgot your password?</a>
+                        <a href="/forgot-password">
+                          Forgot your password?
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -461,7 +493,7 @@ navigate(redirectPath, {
       </div>
 
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
     </div>
   );
 };

@@ -135,11 +135,8 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
-    const authToken = localStorage.getItem("authToken");
-    const userType = localStorage.getItem("userType");
-
-    // Only set as logged in if we have both token and user type
-    setIsLoggedIn(!!authToken && !!userType);
+    const userId = localStorage.getItem("userId");
+    setIsLoggedIn(!!userId);
   }, [location]);
 
   useEffect(() => {
@@ -387,16 +384,31 @@ const Header = () => {
                   </Link>
                 </li>
 
-                <li style={{ padding: "0px 15px" }}>
-                  <Link
-                    to="/user/find-matches"
-                    onClick={handleLinkClick}
-                    style={isActive("/user/find-matches") ? activeStyle : normalStyle}
-                  >
-                    <FaSearch style={isActive("/user/find-matches") ? { color: "#ffa500" } : {}} /> &nbsp; 
-                    <span style={isActive("/user/find-matches") ? { color: "#ffa500", fontWeight: "bold" } : {}}>SEARCH</span>
-                  </Link>
-                </li>
+                {isLoggedIn && (
+                  <li style={{ padding: "0px 15px" }}>
+                    <Link
+                      to="/user/find-matches"
+                      onClick={handleLinkClick}
+                      style={isActive("/user/find-matches") ? activeStyle : normalStyle}
+                    >
+                      <FaSearch
+                        style={
+                          isActive("/user/find-matches") ? { color: "#ffa500" } : {}
+                        }
+                      />{" "}
+                      &nbsp;
+                      <span
+                        style={
+                          isActive("/user/find-matches")
+                            ? { color: "#ffa500", fontWeight: "bold" }
+                            : {}
+                        }
+                      >
+                        SEARCH
+                      </span>
+                    </Link>
+                  </li>
+                )}
 
                 <li style={{ padding: "0px 15px" }} className="dropdown">
                   <Link
@@ -447,7 +459,7 @@ const Header = () => {
                   </Link>
                   <ul className="dropdown-menu">
                     <li><Link className="dropdown-item" to="/help-support" onClick={handleLinkClick}>Help & Support</Link></li>
-                    <li><Link className="dropdown-item" to="/report-issue" onClick={handleLinkClick}>Report & Issue</Link></li>
+                    <li><Link className="dropdown-item" to="/report-issue" onClick={handleLinkClick}>Report Your Issue</Link></li>
                   </ul>
                 </li>
 
@@ -547,7 +559,11 @@ const Header = () => {
         <div style={{ padding: "50px 0 20px 0" }}>
           {[
             { path: "/about-us", label: "ABOUT US", icon: <FaInfoCircle /> },
-            { path: "/user/find-matches", label: "SEARCH", icon: <FaSearch /> },
+
+            ...(isLoggedIn
+              ? [{ path: "/user/find-matches", label: "SEARCH", icon: <FaSearch /> }]
+              : []),
+
             { path: "/user/events-page", label: "EVENTS", icon: <FaCalendarAlt /> },
             { path: "/user/user-plan-selection", label: "PLANS", icon: <FaStar /> },
           ].map((item) => (

@@ -125,7 +125,7 @@ const HelpDropdown = ({ isVisible }) => {
       path: "/help-support",
     },
     {
-      title: "Report & Issue",
+      title: "Report Your Issue",
       path: "/report-issue",
     },
   ];
@@ -333,23 +333,25 @@ const MainLayout = () => {
                 ABOUT US
               </button>
 
-              <button
-                onClick={() => handleNavigate("/user/find-matches")}
-                className={`group flex items-center space-x-2 font-medium transition-all duration-200 py-2 ${
-                  location.pathname === "/user/find-matches"
-                    ? "text-purple-600 font-bold border-b-2 border-purple-600"
-                    : "text-gray-800 hover:text-purple-600"
-                }`}
-              >
-                <Search
-                  className={`w-4 h-4 transition-colors duration-200 ${
-                    location.pathname === "/user/find-matches"
-                      ? "text-purple-600"
-                      : "text-gray-800 group-hover:text-purple-600"
-                  }`}
-                />
-                <span className={location.pathname === "/user/find-matches" ? "text-purple-600" : ""}>SEARCH</span>
-              </button>
+             {isUserActive && (
+  <button
+    onClick={() => handleNavigate("/user/find-matches")}
+    className={`group flex items-center space-x-2 font-medium transition-all duration-200 py-2 ${
+      location.pathname === "/user/find-matches"
+        ? "text-purple-600 font-bold border-b-2 border-purple-600"
+        : "text-gray-800 hover:text-purple-600"
+    }`}
+  >
+    <Search
+      className={`w-4 h-4 transition-colors duration-200 ${
+        location.pathname === "/user/find-matches"
+          ? "text-purple-600"
+          : "text-gray-800 group-hover:text-purple-600"
+      }`}
+    />
+    <span>SEARCH</span>
+  </button>
+)}
 
               <div
                 className="relative"
@@ -491,7 +493,9 @@ const MainLayout = () => {
               <nav className="flex flex-col space-y-3 mt-4">
                 {[
                   { path: "/about-us", label: "ABOUT US" },
-                  { path: "/user/find-matches", label: "SEARCH" },
+                 ...(isUserActive
+    ? [{ path: "/user/find-matches", label: "SEARCH" }]
+    : []),
                   { path: "/user/events-page", label: "EVENTS" },
                   { path: "/user/user-plan-selection", label: "PLANS" },
                   { path: "/help-support", label: "HELP & SUPPORT" },

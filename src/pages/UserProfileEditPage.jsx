@@ -1484,6 +1484,69 @@ const handleDeleteVideo = () => {
                 style={{ paddingLeft: "20px", paddingRight: "15px" }}
               >
                 <form onSubmit={handleSubmit}>
+                  {/* Top Buttons Section */}
+                  <div
+                    style={{
+                      background: "#fff",
+                      padding: "20px 24px",
+                      borderRadius: "8px",
+                      marginBottom: "24px",
+                      boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: "12px",
+                      position: "sticky",
+                      top: "115px",
+                      zIndex: 30,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => window.history.back()}
+                      disabled={isSubmitting}
+                      style={{
+                        padding: "10px 24px",
+                        background: "#fff",
+                        color: "#374151",
+                        border: "2px solid #d1d5db",
+                        borderRadius: "6px",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: isSubmitting ? "not-allowed" : "pointer",
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      style={{
+                        padding: "10px 24px",
+                        background: isSubmitting ? "#9ca3af" : "#667eea",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "6px",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: isSubmitting ? "not-allowed" : "pointer",
+                        transition: "all 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSubmitting) {
+                          e.target.style.background = "#5568d3";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSubmitting) {
+                          e.target.style.background = "#667eea";
+                        }
+                      }}
+                    >
+                      {isSubmitting ? "Submitting..." : "Save Changes"}
+                    </button>
+                  </div>
+
                   {/* Profile Image Upload Section */}
                   <BasicInfomation
                     profileImagePreview={profileImagePreview}
@@ -2145,7 +2208,7 @@ const handleDeleteVideo = () => {
                         value={formData.caste}
                         onChange={handleInputChange}
                         options={[
-                          "Doesn't wish to specify",
+                          "Do not wish to specify",
                           "Latin Catholic",
                           "Roman Catholic",
                           "Syro Malabar",
@@ -2537,14 +2600,103 @@ const handleDeleteVideo = () => {
                       <FormInput
                         label="Education"
                         name="education"
+                        type="select"
+                        searchable={true}
                         value={formData.education}
                         onChange={handleInputChange}
+                        options={[
+                          "B.Arch",
+                          "B.Com",
+                          "B.Ed",
+                          "B.Pharm",
+                          "B.Sc",
+                          "B.Sc (Hons)",
+                          "B.E",
+                          "B.Tech",
+                          "BA",
+                          "BBA",
+                          "BCA",
+                          "BDS",
+                          "BHM",
+                          "BAMS",
+                          "BHMS",
+                          "BSw",
+                          "LLB",
+                          "M.Arch",
+                          "M.Com",
+                          "M.Ed",
+                          "M.Pharm",
+                          "M.Sc",
+                          "M.E",
+                          "M.Tech",
+                          "MA",
+                          "MBA",
+                          "MCA",
+                          "MDS",
+                          "MHM",
+                          "MSW",
+                          "LLM",
+                          "MBBS",
+                          "MD",
+                          "MS",
+                          "Ph.D",
+                          "Diploma",
+                          "Polytechnic",
+                          "Trade School",
+                          "Higher Secondary / Plus Two",
+                          "SSLC / 10th",
+                          "Other",
+                        ]}
                       />
                       <FormInput
                         label="Additional Education"
                         name="additionalEducation"
+                        type="select"
+                        searchable={true}
                         value={formData.additionalEducation}
                         onChange={handleInputChange}
+                        options={[
+                          "B.Arch",
+                          "B.Com",
+                          "B.Ed",
+                          "B.Pharm",
+                          "B.Sc",
+                          "B.E",
+                          "B.Tech",
+                          "BA",
+                          "BBA",
+                          "BCA",
+                          "BDS",
+                          "BHM",
+                          "BAMS",
+                          "BHMS",
+                          "BSw",
+                          "LLB",
+                          "M.Arch",
+                          "M.Com",
+                          "M.Ed",
+                          "M.Pharm",
+                          "M.Sc",
+                          "M.E",
+                          "M.Tech",
+                          "MA",
+                          "MBA",
+                          "MCA",
+                          "MDS",
+                          "MHM",
+                          "MSW",
+                          "LLM",
+                          "MBBS",
+                          "MD",
+                          "MS",
+                          "Ph.D",
+                          "Diploma",
+                          "Polytechnic",
+                          "Trade School",
+                          "Higher Secondary / Plus Two",
+                          "SSLC / 10th",
+                          "Other",
+                        ]}
                       />
                       <FormInput
                         label="College"
@@ -2565,6 +2717,7 @@ const handleDeleteVideo = () => {
                         label="Employment Type"
                         name="employmentType"
                         type="select"
+                        searchable={true}
                         value={formData.employmentType}
                         onChange={handleInputChange}
                         options={[
@@ -2578,8 +2731,113 @@ const handleDeleteVideo = () => {
                       <FormInput
                         label="Occupation"
                         name="occupation"
+                        type="select"
+                        searchable={true}
                         value={formData.occupation}
                         onChange={handleInputChange}
+                        options={[
+                          "Accountant",
+                          "Actor",
+                          "Administrative Professional",
+                          "Advertising Professional",
+                          "Agri-Business Professional",
+                          "Air Hostess / Flight Attendant",
+                          "Architect",
+                          "Artist",
+                          "Auditor",
+                          "Banking Professional",
+                          "Beautician",
+                          "Biologist / Botanist",
+                          "Business",
+                          "Chartered Accountant",
+                          "Civil Engineer",
+                          "Clerical Official",
+                          "Commercial Pilot",
+                          "Company Secretary",
+                          "Computer Professional",
+                          "Consultant",
+                          "Contractor",
+                          "Cost Accountant",
+                          "Creative Person",
+                          "Customer Support Professional",
+                          "Defense Employee",
+                          "Dentist",
+                          "Designer",
+                          "Doctor",
+                          "Economist",
+                          "Engineer",
+                          "Engineer (Mechanical)",
+                          "Engineer (Project)",
+                          "Entertainment Professional",
+                          "Event Manager",
+                          "Executive",
+                          "Factory Worker",
+                          "Farmer",
+                          "Fashion Designer",
+                          "Finance Professional",
+                          "Flight Attendant",
+                          "Government Employee",
+                          "Graphic Designer",
+                          "Health Care Professional",
+                          "Hotel Management Professional",
+                          "HR Professional",
+                          "Human Resources Professional",
+                          "Indian Administrative Services (IAS)",
+                          "Indian Foreign Services (IFS)",
+                          "Indian Police Services (IPS)",
+                          "Interior Designer",
+                          "Investment Professional",
+                          "IT Professional",
+                          "Journalist",
+                          "Lawyer",
+                          "Lecturer",
+                          "Legal Professional",
+                          "Manager",
+                          "Marketing Professional",
+                          "Media Professional",
+                          "Medical Professional",
+                          "Merchant Naval Officer",
+                          "Microbiologist",
+                          "Military",
+                          "Model",
+                          "Musician",
+                          "Nurse",
+                          "Nutritionist",
+                          "Occupational Therapist",
+                          "Optician",
+                          "Pharmacist",
+                          "Photographer",
+                          "Physical Therapist",
+                          "Physician",
+                          "Pilot",
+                          "Police",
+                          "Politician",
+                          "Professor",
+                          "Psychologist",
+                          "Public Relations Professional",
+                          "Real Estate Professional",
+                          "Researcher",
+                          "Retired",
+                          "Sales Professional",
+                          "Scientist",
+                          "Secretary",
+                          "Security Professional",
+                          "Self Employed",
+                          "Social Worker",
+                          "Software Consultant",
+                          "Software Engineer",
+                          "Sportsman",
+                          "Student",
+                          "Teacher",
+                          "Technician",
+                          "Training Professional",
+                          "Transportation Professional",
+                          "Veterinary Doctor",
+                          "Volunteer",
+                          "Writer",
+                          "Zoologist",
+                          "Not Working",
+                        ]}
                       />
                       <FormInput
                         label="Position"
@@ -2596,9 +2854,39 @@ const handleDeleteVideo = () => {
                       <FormInput
                         label="Annual Income"
                         name="annualIncome"
+                        type="select"
+                        searchable={true}
                         value={formData.annualIncome}
                         onChange={handleInputChange}
-                        placeholder="e.g., 5-10 Lakhs"
+                        options={[
+                          "50 Thousands",
+                          "1 Lakh",
+                          "2 Lakhs",
+                          "3 Lakhs",
+                          "4 Lakhs",
+                          "5 Lakhs",
+                          "6 Lakhs",
+                          "7 Lakhs",
+                          "8 Lakhs",
+                          "9 Lakhs",
+                          "10 Lakhs",
+                          "12 Lakhs",
+                          "14 Lakhs",
+                          "16 Lakhs",
+                          "18 Lakhs",
+                          "20 Lakhs",
+                          "25 Lakhs",
+                          "30 Lakhs",
+                          "35 Lakhs",
+                          "40 Lakhs",
+                          "50 Lakhs",
+                          "60 Lakhs",
+                          "70 Lakhs",
+                          "80 Lakhs",
+                          "90 Lakhs",
+                          "1 Crore",
+                          "1 Crore+",
+                        ]}
                       />
                     </div>
                   </FormSection>

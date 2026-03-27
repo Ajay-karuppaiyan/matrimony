@@ -108,7 +108,7 @@ const Footer = () => {
         </div>
     <div className="row foot-count">
   <p style={{ color: "white" }}>
-    Company name Site - Designed and Developed by{" "}
+     Designed and Developed by{" "}
     <a
       href="https://sensitive.co.in/"
       target="_blank"

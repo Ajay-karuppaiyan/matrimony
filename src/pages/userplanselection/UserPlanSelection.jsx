@@ -447,7 +447,7 @@ const UserPlanSelection = () => {
       </section>
 
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
     </div>
   );
 };
