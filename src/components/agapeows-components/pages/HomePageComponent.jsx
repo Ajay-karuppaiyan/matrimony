@@ -670,7 +670,7 @@ const HomePageComponent = () => {
         <BlogPostStart />
         <FindYourPerfectMatchNow />
         <Footer />
-        <CopyRights />
+        {/* <CopyRights /> */}
       </div>
     </div>
   );

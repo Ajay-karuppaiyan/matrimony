@@ -2451,7 +2451,7 @@ const MoreDetails = () => {
       )}
 
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
       <ToastContainer />
 
       {/* Chat Ui */}
