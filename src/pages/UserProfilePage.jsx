@@ -1262,7 +1262,7 @@ const UserProfilePage = () => {
 
       {/* Footer */}
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
     </div>
   );
 };

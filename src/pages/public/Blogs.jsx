@@ -208,15 +208,15 @@ const Blogs = () => {
                   rounded-3xl p-8 shadow-sm hover:shadow-xl 
                   transition duration-300`}
                 >
-                  
+
                   {/* IMAGE */}
-                 <div className="w-full max-h-[400px] flex items-center justify-center bg-gray-100 rounded-2xl mb-6 overflow-hidden">
-  <img
-    src={blog.coverImage}
-    alt={blog.title}
-    className="w-full h-full object-contain"
-  />
-</div>
+                  <div className="w-full max-h-[400px] flex items-center justify-center bg-gray-100 rounded-2xl mb-6 overflow-hidden">
+                    <img
+                      src={blog.coverImage}
+                      alt={blog.title}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                   {/* CATEGORY + DATE */}
                   <p className="text-sm text-gray-500 mb-3">
                     <span className="font-semibold text-gray-700">

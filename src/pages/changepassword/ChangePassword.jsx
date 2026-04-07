@@ -863,15 +863,12 @@ const ChangePassword = () => {
 
     <div className="pt-48 flex flex-1 bg-gray-50"> 
   {/* Sidebar */}
-  <div
-                className="col-md-3 col-lg-2"
-                style={{ paddingLeft: 0, marginLeft: "0px" }}
-              >
-                <UserSideBar />
-              </div>
+ <div className="hidden md:block col-md-3 col-lg-2">
+  <UserSideBar />
+</div>
         {/* Form Section */}
-        <main className="flex-1 flex justify-center items-start p-6">
-    <div className="bg-white shadow-lg rounded-xl p-12 w-full max-w-md "> {/* Added mt-12 to push down, increased padding, rounded-xl for professional look */}
+       <main className="flex-1 flex justify-center items-start p-4 md:p-6">
+   <div className="bg-white shadow-lg rounded-xl p-6 md:p-12 w-full max-w-md">{/* Added mt-12 to push down, increased padding, rounded-xl for professional look */}
       <h4 className="text-gray-500 text-sm font-medium mb-1">Almost Done</h4>
       <h1 className="text-2xl font-semibold mb-6">Reset Password</h1>
 
@@ -955,7 +952,7 @@ const ChangePassword = () => {
       </div>
 
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
     </div>
   );
 };

@@ -14,6 +14,18 @@ const UserPlanSelection = () => {
   const [userId, setUserId] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,15 +64,25 @@ const UserPlanSelection = () => {
   };
 
   // Carousel controls - show 3 plans at a time
-  const plansPerSlide = 3;
+  const plansPerSlide = isMobile ? 1 : 3;
   const totalSlides = Math.ceil(plans.length / plansPerSlide);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    setCurrentSlide((prev) => {
+      if (prev < totalSlides - 1) {
+        return prev + 1;
+      }
+      return prev; // stop at last
+    });
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+    setCurrentSlide((prev) => {
+      if (prev > 0) {
+        return prev - 1;
+      }
+      return prev; // stop at first
+    });
   };
 
   const goToSlide = (index) => {
@@ -286,9 +308,10 @@ const UserPlanSelection = () => {
                   {/* LEFT */}
                   <button
                     onClick={prevSlide}
+                    disabled={currentSlide === 0}
                     style={{
                       position: "absolute",
-                      left: "-50px",
+                      left: isMobile ? "10px" : "-50px",
                       top: "50%",
                       transform: "translateY(-50%)",
                       zIndex: 10,
@@ -311,10 +334,12 @@ const UserPlanSelection = () => {
 
                   {/* RIGHT */}
                   <button
+
                     onClick={nextSlide}
+                    disabled={currentSlide === totalSlides - 1}
                     style={{
                       position: "absolute",
-                      right: "-50px",
+                      right: isMobile ? "10px" : "-50px",
                       top: "50%",
                       transform: "translateY(-50%)",
                       zIndex: 10,
@@ -339,14 +364,18 @@ const UserPlanSelection = () => {
               )}
 
               {/* Plans Display */}
-              <ul>
+              <ul className="flex justify-center items-stretch gap-6 flex-nowrap overflow-hidden">
                 {getCurrentPlans().map((plan, index) => {
 
-                  const isMobile = window.innerWidth < 768;
-                  const isCenter = isMobile ? index === 0 : index === 1;
+                  // const isMobile = window.innerWidth < 768;
+                  const isCenter = isMobile ? true : index === 1;
 
                   return (
-                    <li key={plan._id}>
+                    <li
+                      key={plan._id}
+                      className="flex justify-center"
+                      style={{ width: isMobile ? "100%" : "33.33%" }}
+                    >
                       <div className={`pri-box ${isCenter ? "pri-box-pop" : ""}`}>
 
                         {isCenter && (

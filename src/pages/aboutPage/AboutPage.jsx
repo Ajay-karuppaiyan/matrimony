@@ -244,7 +244,7 @@ const AboutPage = () => {
                 const slideWidth = 100 / itemsToShow;
 
                 return (
-                  <div className="px-10 lg:px-0">
+                  <div className="px-2 sm:px-4 lg:px-0">
                     <div className="overflow-hidden">
                       <div
                         className="flex transition-transform duration-500 ease-in-out"
@@ -253,7 +253,7 @@ const AboutPage = () => {
                         {testimonials.map((item) => (
                           <div
                             key={item.id}
-                            className="flex-shrink-0 px-4"
+                            className="flex-shrink-0 px-2 md:px-6"
                             style={{ width: `${slideWidth}%` }}
                           >
                             <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-md border border-purple-50 flex flex-col h-full transition-all duration-300 hover:shadow-xl group">
@@ -261,7 +261,7 @@ const AboutPage = () => {
                                 {[...Array(5)].map((_, i) => <i key={i} className="fa fa-star text-sm" />)}
                                 <span className="text-gray-400 text-xs ml-2 font-medium">(50 Reviews)</span>
                               </div>
-                              <p className="text-gray-600 italic flex-grow mb-8 leading-relaxed text-lg">
+                              <p className="text-gray-600 italic flex-grow mb-8 leading-relaxed text-sm md:text-lg break-words">
                                 {item.text}
                               </p>
                               <div className="flex items-center gap-5 mt-auto pt-8 border-t border-gray-50">

@@ -1214,7 +1214,7 @@ const UserSearchResult = () => {
 
       <ToastContainer />
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
     </div>
   );
 };

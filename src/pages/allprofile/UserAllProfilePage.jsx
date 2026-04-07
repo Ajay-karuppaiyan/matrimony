@@ -783,7 +783,7 @@ const UserAllProfilePage = () => {
 
       <ToastContainer />
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
     </div>
   );
 };

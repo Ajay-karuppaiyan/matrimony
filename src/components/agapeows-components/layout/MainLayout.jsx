@@ -18,39 +18,23 @@ import { getUserProfile } from "../../../api/axiosService/userAuthService";
 import PreLoader from "../../PreLoader";
 import GlobalSearchModal from "../../GlobalSearchModal";
 
+export const SERVICE_CATEGORIES = [
+  { title: "Personalized Matrimony", path: "/personalized-matrimony" },
+  { title: "NRI Matrimony", path: "/nri-matrimony" },
+  { title: "Churches - Partner with Us", path: "/church-partner" },
+  { title: "Become a Matrimonial Advisor", path: "/matrimonial-advisor" },
+  { title: "Pre-Marital and Marital Counseling", path: "/marital-counseling" },
+  { title: "Bridal Make-up", path: "/bridal-makeup" },
+  { title: "Insurance Services", path: "/insurance-services" },
+];
+
+export const HELP_OPTIONS = [
+  { title: "Help & Support", path: "/help-support" },
+  { title: "Report Your Issue", path: "/report-issue" },
+];
+
 // ExploreDropdown Component - Redesigned as List
 const ExploreDropdown = ({ isVisible }) => {
-  const categories = [
-    {
-      title: "Personalized Matrimony",
-      path: "/personalized-matrimony",
-    },
-    {
-      title: "NRI Matrimony",
-      path: "/nri-matrimony",
-    },
-    {
-      title: "Churches - Partner with Us",
-      path: "/church-partner",
-    },
-    {
-      title: "Become a Matrimonial Advisor",
-      path: "/matrimonial-advisor",
-    },
-    {
-      title: "Pre-Marital and Marital Counseling",
-      path: "/marital-counseling",
-    },
-    {
-      title: "Bridal Make-up",
-      path: "/bridal-makeup",
-    },
-    {
-      title: "Insurance Services",
-      path: "/insurance-services",
-    },
-  ];
-
   const handleNavigate = (path) => {
     window.location.href = path;
   };
@@ -62,7 +46,7 @@ const ExploreDropdown = ({ isVisible }) => {
         : "opacity-0 invisible translate-y-2"
         }`}
     >
-      {categories.map((category, index) => (
+      {SERVICE_CATEGORIES.map((category, index) => (
         <button
           key={index}
           onClick={() => handleNavigate(category.path)}
@@ -119,17 +103,6 @@ const ProfileDropdown = ({ isVisible, onLogout }) => {
 };
 
 const HelpDropdown = ({ isVisible }) => {
-  const options = [
-    {
-      title: "Help & Support",
-      path: "/help-support",
-    },
-    {
-      title: "Report Your Issue",
-      path: "/report-issue",
-    },
-  ];
-
   const handleNavigate = (path) => {
     window.location.href = path;
   };
@@ -141,7 +114,7 @@ const HelpDropdown = ({ isVisible }) => {
         : "opacity-0 invisible translate-y-2"
         }`}
     >
-      {options.map((item, index) => (
+      {HELP_OPTIONS.map((item, index) => (
         <button
           key={index}
           onClick={() => handleNavigate(item.path)}
@@ -163,6 +136,8 @@ const MainLayout = () => {
     useState(false);
   const [isProfileDropdownVisible, setIsProfileDropdownVisible] =
     useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
+  const [isMobileHelpOpen, setIsMobileHelpOpen] = useState(false);
   const [userName, setUserName] = useState(localStorage.getItem("userName"));
   /* import { User as UserIcon } from "lucide-react"; */
   // Need to add User to imports first.
@@ -232,12 +207,12 @@ const MainLayout = () => {
                     {/* <Search className="w-4 h-4" /> */}
                   </div>
                 )}
-                <button onClick={() => handleNavigate("/user/blogs-page")}>
+                <button onClick={() => handleNavigate("/blogs")}>
                   BLOGS
                 </button>
               </div>
               <button
-                onClick={() => handleNavigate("/faq-page")}
+                onClick={() => handleNavigate("/faq")}
                 className="cursor-pointer hover:text-purple-200"
               >
                 FAQ
@@ -489,81 +464,182 @@ const MainLayout = () => {
 
           {/* Mobile Menu */}
           {isMobileMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 border-t">
-              <nav className="flex flex-col space-y-3 mt-4">
-                {[
-                  { path: "/about-us", label: "ABOUT US" },
-                 ...(isUserActive
-    ? [{ path: "/user/find-matches", label: "SEARCH" }]
-    : []),
-                  { path: "/user/events-page", label: "EVENTS" },
-                  { path: "/user/user-plan-selection", label: "PLANS" },
-                  { path: "/help-support", label: "HELP & SUPPORT" },
-                ].map((item) => (
+            <div className="md:hidden mt-4 pb-4 border-t overflow-y-auto custom-scrollbar" style={{ maxHeight: "calc(100vh - 120px)" }}>
+              <nav className="flex flex-col space-y-1 mt-4">
+                <button
+                  onClick={() => {
+                    handleNavigate("/about-us");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`text-left font-medium p-3 rounded-md transition-colors ${
+                    location.pathname === "/about-us"
+                      ? "text-purple-600 bg-purple-50"
+                      : "text-gray-800 hover:text-purple-600 hover:bg-gray-50"
+                  }`}
+                >
+                  ABOUT US
+                </button>
+
+                {isUserActive && (
                   <button
-                    key={item.path}
                     onClick={() => {
-                      handleNavigate(item.path);
+                      handleNavigate("/user/find-matches");
                       setIsMobileMenuOpen(false);
                     }}
-                    className={`text-left font-medium p-2 rounded-md ${
-                      location.pathname === item.path
+                    className={`text-left font-medium p-3 rounded-md transition-colors ${
+                      location.pathname === "/user/find-matches"
                         ? "text-purple-600 bg-purple-50"
                         : "text-gray-800 hover:text-purple-600 hover:bg-gray-50"
                     }`}
                   >
-                    {item.label}
+                    SEARCH
                   </button>
-                ))}
+                )}
+
+                {/* SERVICES Mobile Dropdown Accordion */}
+                <div className="w-full">
+                  <button
+                    onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
+                    className="w-full flex justify-between items-center font-medium p-3 rounded-md text-gray-800 hover:text-purple-600 hover:bg-gray-50 transition-colors"
+                  >
+                    <span>SERVICES</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileServicesOpen ? "rotate-180" : ""}`} />
+                  </button>
+                  
+                  {/* Expanded Dropdown Panel */}
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileServicesOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
+                    <div className="pl-4 pr-2 flex flex-col space-y-1 mt-1 bg-gray-50/50 rounded-md py-2 border-l-2 border-purple-100 ml-2">
+                       {SERVICE_CATEGORIES.map((category, index) => (
+                         <button
+                           key={index}
+                           onClick={() => {
+                             handleNavigate(category.path);
+                             setIsMobileMenuOpen(false);
+                           }}
+                           className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-md transition-colors"
+                         >
+                           {category.title}
+                         </button>
+                       ))}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    handleNavigate("/user/events-page");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`text-left font-medium p-3 rounded-md transition-colors ${
+                    location.pathname === "/user/events-page"
+                      ? "text-purple-600 bg-purple-50"
+                      : "text-gray-800 hover:text-purple-600 hover:bg-gray-50"
+                  }`}
+                >
+                  EVENTS
+                </button>
+
+                <button
+                  onClick={() => {
+                    handleNavigate("/user/user-plan-selection");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`text-left font-medium p-3 rounded-md transition-colors ${
+                    location.pathname === "/user/user-plan-selection"
+                      ? "text-purple-600 bg-purple-50"
+                      : "text-gray-800 hover:text-purple-600 hover:bg-gray-50"
+                  }`}
+                >
+                  PLANS
+                </button>
+
+                {/* HELP & SUPPORT Dropdown Accordion */}
+                <div className="w-full">
+                  <button
+                    onClick={() => setIsMobileHelpOpen(!isMobileHelpOpen)}
+                    className="w-full flex justify-between items-center font-medium p-3 rounded-md text-gray-800 hover:text-purple-600 hover:bg-gray-50 transition-colors"
+                  >
+                    <span>HELP & SUPPORT</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileHelpOpen ? "rotate-180" : ""}`} />
+                  </button>
+                  
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileHelpOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
+                    <div className="pl-4 pr-2 flex flex-col space-y-1 mt-1 bg-gray-50/50 rounded-md py-2 border-l-2 border-purple-100 ml-2">
+                       {HELP_OPTIONS.map((item, index) => (
+                         <button
+                           key={index}
+                           onClick={() => {
+                             handleNavigate(item.path);
+                             setIsMobileMenuOpen(false);
+                           }}
+                           className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-md transition-colors"
+                         >
+                           {item.title}
+                         </button>
+                       ))}
+                    </div>
+                  </div>
+                </div>
               </nav>
 
               {/* Mobile Profile or Auth */}
-              <div className="mt-4 pt-4 border-t">
+              <div className="mt-6 pt-4 border-t border-gray-100">
                 {isUserActive ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-3 mb-3">
+                  <div className="space-y-1 px-2">
+                    <div className="flex items-center space-x-3 mb-4 p-2 bg-purple-50/50 rounded-lg">
                       {userImage ? (
                         <img
                           src={userImage}
                           alt="Profile"
-                          className="w-8 h-8 rounded-full object-cover"
+                          className="w-10 h-10 rounded-full object-cover border-2 border-purple-200"
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                          <User className="w-5 h-5" />
+                        <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 border-2 border-purple-200">
+                          <User className="w-6 h-6" />
                         </div>
                       )}
                       <div>
-                        <div className="text-gray-800 font-medium text-sm">
+                        <div className="text-gray-900 font-semibold text-sm">
                           {userName}
                         </div>
-                        <div className="text-gray-500 text-xs">MY PROFILE</div>
+                        <div className="text-purple-600 font-medium text-xs">MY PROFILE</div>
                       </div>
                     </div>
+                    
                     <button
                       onClick={() => {
                         handleNavigate("/user/user-dashboard-page");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left text-gray-700 py-2"
+                      className="w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2.5 rounded-md transition-colors font-medium text-sm"
+                    >
+                      My Dashboard
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleNavigate("/user/user-profile-page");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2.5 rounded-md transition-colors font-medium text-sm"
                     >
                       My Profile
                     </button>
+                    {/* Kept My Chats */}
                     <button
                       onClick={() => {
                         handleNavigate("/user/show-all-profiles/all-profile");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left text-gray-700 py-2"
+                      className="w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2.5 rounded-md transition-colors font-medium text-sm"
                     >
                       My Chats
                     </button>
                     <button
                       onClick={() => {
-                        handleNavigate(`/user/user-change-password/${userId}`);
+                        handleNavigate(`/reset-password/${userId}`);
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left text-gray-700 py-2"
+                      className="w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2.5 rounded-md transition-colors font-medium text-sm"
                     >
                       Change Password
                     </button>
@@ -572,28 +648,31 @@ const MainLayout = () => {
                         handleNavigate("/user/user-settings-page");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left text-gray-700 py-2"
+                      className="w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2.5 rounded-md transition-colors font-medium text-sm"
                     >
                       User Settings
                     </button>
+                    
+                    <div className="my-2 border-t border-gray-100"></div>
+                    
                     <button
                       onClick={() => {
                         handleLogOut();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left text-red-600 py-2"
+                      className="w-full text-left text-red-600 hover:bg-red-50 px-3 py-2.5 rounded-md transition-colors font-medium text-sm flex items-center"
                     >
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-3 px-2">
                     <button
                       onClick={() => {
                         handleNavigate("/user/user-sign-up");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left text-gray-800 hover:text-purple-600 font-medium py-2"
+                      className="w-full text-center text-purple-600 border border-purple-600 font-medium py-2.5 rounded-lg hover:bg-purple-50 transition-colors"
                     >
                       REGISTER
                     </button>
@@ -602,7 +681,7 @@ const MainLayout = () => {
                         handleNavigate("/user/user-login");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                      className="w-full bg-purple-600 text-white py-2.5 rounded-lg font-medium hover:bg-purple-700 transition-colors shadow-sm"
                     >
                       LOGIN
                     </button>

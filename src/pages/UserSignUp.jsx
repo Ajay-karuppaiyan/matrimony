@@ -443,10 +443,13 @@ const UserSignUp = () => {
                               top: "42px",
                               cursor: "pointer",
                               color: "#555",
+                              zIndex: 10
                             }}
                             onMouseDown={() => setShowPassword(true)}
                             onMouseUp={() => setShowPassword(false)}
                             onMouseLeave={() => setShowPassword(false)}
+                            onTouchStart={() => setShowPassword(true)}
+                            onTouchEnd={() => setShowPassword(false)}
                           />
                         </div>
 

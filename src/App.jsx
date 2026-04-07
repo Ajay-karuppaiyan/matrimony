@@ -211,7 +211,7 @@ function App() {
         <Route path="/user/user-plan-page" element={<UserPlanPage />} />
         <Route path="/user/user-interest-page" element={<UserInterest />} />
         <Route path="/user/user-chat-page" element={<UserChatPage />} />
-        
+
         <Route
           path="/user/user-dashboard-page"
           element={<UserDashboardPage />}
@@ -239,6 +239,7 @@ function App() {
         <Route path="/show-searched-result" element={<UserSearchResult />} />
         <Route path="/user/find-matches" element={<GlobalSearchModal />} />
         <Route path="/reset-password/:userId" element={<ChangePassword />} />
+        <Route path="/user/user-change-password/:userId" element={<ChangePassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/profile-more-details/:profileId"
@@ -247,21 +248,20 @@ function App() {
         <Route path="/join-now-page" element={<JoinNow />} />
         <Route path="/enquiry-page" element={<EnquiryPage />} />
         <Route path="/contact-page" element={<ContactPage />} />
-        <Route path="/faq-page" element={<FaqPage />} />
+        <Route path="/faq" element={<FaqPage />} />
         <Route path="/about-us" element={<AboutPage />} />
         <Route path="/bridal-makeup" element={<BridalMakeup />} />
         <Route path="/insurance-services" element={<InsuranceServices />} />
         <Route path="/user/events-page" element={<Events />} />
-        
+
         <Route path="/report-issue" element={<ReportIssue />} />
 
         <Route path="/personalized-matrimony" element={<PersonalizedMatrimony />} />
-<Route path="/nri-matrimony" element={<NriMatrimony />} />
-<Route path="/church-partner" element={<ChurchPartner />} />
-<Route path="/matrimonial-advisor" element={<MatrimonialAdvisor />} />
-<Route path="/marital-counseling" element={<MaritalCounseling />} />
-<Route path="/user/blogs-page" element={<Blogs />} />
-        
+        <Route path="/nri-matrimony" element={<NriMatrimony />} />
+        <Route path="/church-partner" element={<ChurchPartner />} />
+        <Route path="/matrimonial-advisor" element={<MatrimonialAdvisor />} />
+        <Route path="/marital-counseling" element={<MaritalCounseling />} />
+        <Route path="/blogs" element={<Blogs />} />
       </Routes>
     </Router>
   );

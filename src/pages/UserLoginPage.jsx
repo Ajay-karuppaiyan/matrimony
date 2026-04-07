@@ -379,9 +379,8 @@ const UserLoginPage = () => {
                           <label className="lb">Email:</label>
                           <input
                             type="email"
-                            className={`form-control ${
-                              errors.email ? "is-invalid" : ""
-                            }`}
+                            className={`form-control ${errors.email ? "is-invalid" : ""
+                              }`}
                             id="email"
                             placeholder="Enter email"
                             name="email"
@@ -406,9 +405,8 @@ const UserLoginPage = () => {
 
                           <input
                             type={showPassword ? "text" : "password"}
-                            className={`form-control ${
-                              errors.password ? "is-invalid" : ""
-                            }`}
+                            className={`form-control ${errors.password ? "is-invalid" : ""
+                              }`}
                             id="pwd"
                             placeholder="Enter password"
                             name="password"
@@ -426,12 +424,13 @@ const UserLoginPage = () => {
                             onMouseDown={() => setShowPassword(true)}
                             onMouseUp={() => setShowPassword(false)}
                             onMouseLeave={() => setShowPassword(false)}
+                            onTouchStart={() => setShowPassword(true)}
+                            onTouchEnd={() => setShowPassword(false)}
                             style={{
                               position: "absolute",
                               right: "10px",
                               top: "38px",
                               cursor: "pointer",
-                              userSelect: "none",
                             }}
                           >
                             👁️
