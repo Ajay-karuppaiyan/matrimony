@@ -3,6 +3,14 @@ import LayoutComponent from "../../components/layouts/LayoutComponent";
 import Footer from "../../components/Footer";
 import { getUserCounts } from "../../api/axiosService/userAuthService";
 
+const testimonialsData = [
+  { id: 1, name: "John Smith", role: "IT Professional", img: "images/profiles/1.jpg", text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout." },
+  { id: 2, name: "Julia Ann", role: "Teacher", img: "images/profiles/6.jpg", text: "Finding my soulmate was so easy with Agape Vows. The platform is secure and the profiles are very genuine." },
+  { id: 3, name: "William Son", role: "Govt Staff", img: "images/profiles/7.jpg", text: "The support team was amazing. They helped me navigate through the process and find the perfect match." },
+  { id: 4, name: "Anita Roy", role: "Doctor", img: "images/profiles/2.jpg", text: "Professional service and very authentic profiles. I highly recommend Agape Vows to everyone seeking a partner." },
+  { id: 5, name: "Sarah Khan", role: "Designer", img: "images/profiles/3.jpg", text: "A truly wonderful experience. The team was supportive at each stage. Very happy with the results!" },
+];
+
 const AboutPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
@@ -17,6 +25,15 @@ const AboutPage = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Ensure currentIndex is valid when screen size changes
+  useEffect(() => {
+    const itemsToShow = windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3;
+    const maxIndex = Math.max(0, testimonialsData.length - itemsToShow);
+    if (currentIndex > maxIndex) {
+      setCurrentIndex(maxIndex);
+    }
+  }, [windowWidth, currentIndex]);
 
   useEffect(() => {
     const fetchCounts = async () => {
@@ -211,14 +228,14 @@ const AboutPage = () => {
       {/* CUSTOM TESTIMONIALS SLIDER IN PREMIUM FLOATING BLOCK */}
       <section className="py-20 my-10">
         <div className="container mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="bg-purple-50/80 p-10 md:p-16 rounded-[4rem] shadow-sm border border-purple-100 relative group overflow-visible">
+          <div className="bg-purple-50/80 p-6 sm:p-10 md:p-16 rounded-[2.5rem] md:rounded-[4rem] shadow-sm border border-purple-100 relative group overflow-visible">
             {/* Background Decorative Elements */}
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-purple-200/30 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-200/30 rounded-full blur-3xl"></div>
 
             <div className="row justify-center text-center mb-16">
               <div className="col-lg-8">
-                <h2 className="text-4xl md:text-5xl font-black tracking-tight uppercase mb-4">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight uppercase mb-4">
                   <span className="text-[#af1684]">Customer</span> <span className="text-gray-900">Testimonials</span>
                 </h2>
                 <div className="w-20 h-1 bg-[#af1684] mx-auto rounded-full mb-6"></div>
@@ -230,15 +247,7 @@ const AboutPage = () => {
 
             <div className="relative group/slider">
               {(() => {
-                const testimonials = [
-                  { id: 1, name: "John Smith", role: "IT Professional", img: "images/profiles/1.jpg", text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout." },
-                  { id: 2, name: "Julia Ann", role: "Teacher", img: "images/profiles/6.jpg", text: "Finding my soulmate was so easy with Agape Vows. The platform is secure and the profiles are very genuine." },
-                  { id: 3, name: "William Son", role: "Govt Staff", img: "images/profiles/7.jpg", text: "The support team was amazing. They helped me navigate through the process and find the perfect match." },
-                  { id: 4, name: "Anita Roy", role: "Doctor", img: "images/profiles/2.jpg", text: "Professional service and very authentic profiles. I highly recommend Agape Vows to everyone seeking a partner." },
-                  { id: 5, name: "Sarah Khan", role: "Designer", img: "images/profiles/3.jpg", text: "A truly wonderful experience. The team was supportive at each stage. Very happy with the results!" },
-
-                ];
-
+                const testimonials = testimonialsData;
                 const itemsToShow = windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3;
                 const maxIndex = Math.max(0, testimonials.length - itemsToShow);
                 const slideWidth = 100 / itemsToShow;
@@ -256,19 +265,19 @@ const AboutPage = () => {
                             className="flex-shrink-0 px-2 md:px-6"
                             style={{ width: `${slideWidth}%` }}
                           >
-                            <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-md border border-purple-50 flex flex-col h-full transition-all duration-300 hover:shadow-xl group">
+                            <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-md border border-purple-50 flex flex-col h-full transition-all duration-300 hover:shadow-xl group">
                               <div className="flex text-orange-400 mb-6 space-x-1">
                                 {[...Array(5)].map((_, i) => <i key={i} className="fa fa-star text-sm" />)}
                                 <span className="text-gray-400 text-xs ml-2 font-medium">(50 Reviews)</span>
                               </div>
-                              <p className="text-gray-600 italic flex-grow mb-8 leading-relaxed text-sm md:text-lg break-words">
+                              <p className="text-gray-600 italic flex-grow mb-6 md:mb-8 leading-relaxed text-sm md:text-base lg:text-lg">
                                 {item.text}
                               </p>
-                              <div className="flex items-center gap-5 mt-auto pt-8 border-t border-gray-50">
-                                <img src={item.img} alt={item.name} className="w-16 h-16 rounded-full border-2 border-white shadow-sm object-cover" />
+                              <div className="flex items-center gap-3 md:gap-5 mt-auto pt-6 md:pt-8 border-t border-gray-50">
+                                <img src={item.img} alt={item.name} className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-white shadow-sm object-cover" />
                                 <div className="text-left">
-                                  <h4 className="font-bold text-gray-900 leading-tight text-xl">{item.name}</h4>
-                                  <span className="text-xs text-gray-500 font-bold uppercase tracking-widest leading-loose">{item.role}</span>
+                                  <h4 className="font-bold text-gray-900 leading-tight text-lg md:text-xl">{item.name}</h4>
+                                  <span className="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-widest leading-loose">{item.role}</span>
                                 </div>
                               </div>
                             </div>
@@ -280,17 +289,17 @@ const AboutPage = () => {
                     {/* Absolute Side Arrows */}
                     <button
                       onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
-                      className={`absolute -left-4 lg:-left-20 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex === 0 ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
+                      className={`absolute -left-2 sm:-left-4 lg:-left-20 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex === 0 ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
                       disabled={currentIndex === 0}
                     >
-                      <i className="fa fa-chevron-left text-xl" />
+                      <i className="fa fa-chevron-left text-base md:text-xl" />
                     </button>
                     <button
                       onClick={() => setCurrentIndex(prev => Math.min(maxIndex, prev + 1))}
-                      className={`absolute -right-4 lg:-right-20 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex >= maxIndex ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
+                      className={`absolute -right-2 sm:-right-4 lg:-right-20 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-xl border border-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 z-10 ${currentIndex >= maxIndex ? 'opacity-30 cursor-not-allowed invisible lg:visible lg:opacity-20' : 'opacity-100'}`}
                       disabled={currentIndex >= maxIndex}
                     >
-                      <i className="fa fa-chevron-right text-xl" />
+                      <i className="fa fa-chevron-right text-base md:text-xl" />
                     </button>
 
                     {/* Dots Pagination */}
